@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
-import { submitContactForm } from '@/lib/cosmic'
+import { submitContactAction } from '@/app/actions/contact'
 import type { ContactFormData } from '@/types'
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error'
@@ -21,7 +21,8 @@ export default function ContactForm() {
     setStatus('submitting')
     setErrorMessage('')
 
-    const result = await submitContactForm(formData)
+    // Call the server action instead of the Cosmic function directly
+    const result = await submitContactAction(formData)
 
     if (result.success) {
       setStatus('success')
