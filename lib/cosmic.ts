@@ -1,5 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
-import type { Course, Lesson, Category, Instructor } from '@/types'
+import type { Course, Lesson, Category, Instructor, ContactFormData } from '@/types'
 
 export const cosmic = createBucketClient({
   bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
@@ -192,5 +192,34 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
       return null
     }
     throw new Error('Failed to fetch lesson')
+  }
+}
+
+// Submit contact form
+export async function submitContactForm(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
+  try {
+    const submittedAt = new Date().toISOString()
+    const slug = `contact-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+    
+    await cosmic.objects.insertOne({
+      title: `Contact from ${data.name}`,
+      slug,
+      type: 'contact-form-submissions',
+      metadata: {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+        submitted_at: submittedAt,
+      },
+    })
+    
+    return { success: true }
+  } catch (error) {
+    console.error('Failed to submit contact form:', error)
+    return { 
+      success: false, 
+      error: 'Failed to submit contact form. Please try again.' 
+    }
   }
 }
