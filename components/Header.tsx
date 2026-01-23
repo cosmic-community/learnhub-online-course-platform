@@ -30,6 +30,12 @@ export default function Header() {
             >
               Categories
             </Link>
+            <Link
+              href="/contact"
+              className="text-navy-300 hover:text-white transition-colors"
+            >
+              Contact
+            </Link>
           </nav>
 
           {/* Desktop CTA */}
@@ -74,6 +80,13 @@ export default function Header() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Categories
+              </Link>
+              <Link
+                href="/contact"
+                className="text-navy-300 hover:text-white transition-colors py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact
               </Link>
               <Link
                 href="/courses"

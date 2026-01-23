@@ -33,6 +33,11 @@ export default function Footer() {
                   Categories
                 </Link>
               </li>
+              <li>
+                <Link href="/contact" className="text-navy-400 hover:text-primary-400 transition-colors">
+                  Contact Us
+                </Link>
+              </li>
             </ul>
           </div>
 

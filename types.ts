@@ -79,6 +79,26 @@ export interface Course extends CosmicObject {
   };
 }
 
+// Contact Form Submission type
+export interface ContactFormSubmission extends CosmicObject {
+  type: 'contact-form-submissions';
+  metadata: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+    submitted_at: string;
+  };
+}
+
+// Contact form input data (for form submission)
+export interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 // API Response types
 export interface CosmicResponse<T> {
   objects: T[];
