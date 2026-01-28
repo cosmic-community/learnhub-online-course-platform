@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
+import CourseProgressBadge from './CourseProgressBadge'
 
 interface CourseCardProps {
   course: Course
@@ -30,6 +31,9 @@ export default function CourseCard({ course }: CourseCardProps) {
             <span className="text-5xl">📚</span>
           </div>
         )}
+        
+        {/* Progress Badge - Top Left */}
+        <CourseProgressBadge courseSlug={course.slug} />
         
         {/* Price Badge */}
         <div className="absolute top-4 right-4">

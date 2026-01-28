@@ -1,51 +1,130 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import type { Lesson } from '@/types'
+import { isLessonCompleted } from '@/lib/progress'
 
 interface LessonListProps {
   lessons: Lesson[]
   courseSlug: string
+  currentLessonSlug?: string
 }
 
-export default function LessonList({ lessons, courseSlug }: LessonListProps) {
+export default function LessonList({ lessons, courseSlug, currentLessonSlug }: LessonListProps) {
+  const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set())
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+    // Check completion status for all lessons
+    const completed = new Set<string>()
+    lessons.forEach((lesson) => {
+      if (isLessonCompleted(courseSlug, lesson.slug)) {
+        completed.add(lesson.slug)
+      }
+    })
+    setCompletedLessons(completed)
+  }, [lessons, courseSlug])
+  
+  // Calculate total duration
+  const totalMinutes = lessons.reduce((acc, lesson) => {
+    return acc + (lesson.metadata?.duration_minutes || 0)
+  }, 0)
+
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  
+  // Calculate progress
+  const progressPercent = mounted && lessons.length > 0 
+    ? Math.round((completedLessons.size / lessons.length) * 100)
+    : 0
+
   return (
-    <div className="space-y-2">
-      {lessons.map((lesson, index) => (
-        <Link
-          key={lesson.id}
-          href={`/courses/${courseSlug}/lessons/${lesson.slug}`}
-          className="flex items-center gap-4 p-4 rounded-lg bg-navy-800/50 hover:bg-navy-800 transition-colors group"
-        >
-          <div className="w-10 h-10 rounded-full bg-navy-700 flex items-center justify-center text-sm font-medium text-navy-200 group-hover:bg-primary-500 group-hover:text-white transition-colors flex-shrink-0">
-            {index + 1}
+    <div className="card overflow-hidden">
+      <div className="p-4 border-b border-navy-800">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-semibold text-white">Course Content</h3>
+          {mounted && progressPercent > 0 && (
+            <span className="text-xs font-medium text-primary-400">
+              {progressPercent}% complete
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-4 text-sm text-navy-400">
+          <span>{lessons.length} lessons</span>
+          {totalMinutes > 0 && (
+            <span>
+              {hours > 0 ? `${hours}h ` : ''}{minutes > 0 ? `${minutes}m` : ''}
+            </span>
+          )}
+        </div>
+        {/* Progress bar */}
+        {mounted && progressPercent > 0 && (
+          <div className="mt-3 h-1.5 bg-navy-700 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            />
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-white group-hover:text-primary-400 transition-colors truncate">
-              {lesson.metadata?.title || lesson.title}
-            </h4>
-            {lesson.metadata?.description && (
-              <p className="text-sm text-navy-400 truncate">
-                {lesson.metadata.description}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center gap-4 text-sm text-navy-400 flex-shrink-0">
-            {lesson.metadata?.video_url && (
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </span>
-            )}
-            {lesson.metadata?.duration_minutes && (
-              <span>{lesson.metadata.duration_minutes} min</span>
-            )}
-            <svg className="w-5 h-5 text-navy-600 group-hover:text-primary-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </Link>
-      ))}
+        )}
+      </div>
+      <div className="divide-y divide-navy-800 max-h-[500px] overflow-y-auto">
+        {lessons.map((lesson, index) => {
+          const isCurrent = lesson.slug === currentLessonSlug
+          const isCompleted = mounted && completedLessons.has(lesson.slug)
+          
+          return (
+            <Link
+              key={lesson.id}
+              href={`/courses/${courseSlug}/lessons/${lesson.slug}`}
+              className={`flex items-start gap-3 p-4 transition-colors ${
+                isCurrent
+                  ? 'bg-primary-500/10 border-l-2 border-primary-500'
+                  : 'hover:bg-navy-800/50'
+              }`}
+            >
+              {/* Lesson number or completion check */}
+              <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium ${
+                isCompleted
+                  ? 'bg-primary-500 text-white'
+                  : isCurrent
+                    ? 'bg-primary-500/20 text-primary-400 border border-primary-500'
+                    : 'bg-navy-800 text-navy-400'
+              }`}>
+                {isCompleted ? (
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                  </svg>
+                ) : (
+                  index + 1
+                )}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <h4 className={`font-medium leading-tight ${
+                  isCurrent ? 'text-primary-400' : isCompleted ? 'text-navy-300' : 'text-white'
+                }`}>
+                  {lesson.metadata?.title || lesson.title}
+                </h4>
+                {lesson.metadata?.duration_minutes && (
+                  <p className="text-xs text-navy-500 mt-1">
+                    {lesson.metadata.duration_minutes} min
+                  </p>
+                )}
+              </div>
+              
+              {isCurrent && (
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/20 text-primary-400">
+                    Current
+                  </span>
+                </div>
+              )}
+            </Link>
+          )
+        })}
+      </div>
     </div>
   )
 }
