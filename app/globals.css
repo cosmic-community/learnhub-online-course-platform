@@ -48,6 +48,38 @@
   }
 }
 
+/* Confetti animation */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti-fall linear forwards;
+}
+
+/* Streak pulse animation */
+@keyframes streak-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(20, 184, 166, 0);
+  }
+}
+
+.animate-streak {
+  animation: streak-pulse 2s ease-in-out infinite;
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-navy-200 leading-relaxed;
@@ -104,4 +136,18 @@
 
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
+}
+
+/* XP Progress animation */
+@keyframes xp-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(20, 184, 166, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(20, 184, 166, 0.6);
+  }
+}
+
+.xp-glow {
+  animation: xp-glow 2s ease-in-out infinite;
 }

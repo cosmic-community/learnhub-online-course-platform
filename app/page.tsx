@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import DailyTip from '@/components/DailyTip'
+import ContinueLearning from '@/components/ContinueLearning'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -13,6 +15,15 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons and hours
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +33,10 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span>Track your progress & earn XP as you learn!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,20 +56,34 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Continue Learning - Only shows if user has started courses */}
+      <ContinueLearning />
+
+      {/* Daily Learning Tip */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <DailyTip />
         </div>
       </section>
 
@@ -85,8 +114,50 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Why LearnHub - New Section */}
       <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-white mb-2">Why Learn With Us?</h2>
+            <p className="text-navy-400">Built for developers who want to level up</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="card p-8 text-center group hover:border-primary-500/50">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                🎮
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Gamified Learning</h3>
+              <p className="text-navy-400">
+                Earn XP, maintain streaks, and level up as you progress through courses. Learning has never been more fun!
+              </p>
+            </div>
+
+            <div className="card p-8 text-center group hover:border-primary-500/50">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                💻
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Hands-On Projects</h3>
+              <p className="text-navy-400">
+                Every course includes real-world projects with code examples you can follow along and build yourself.
+              </p>
+            </div>
+
+            <div className="card p-8 text-center group hover:border-primary-500/50">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                🏆
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Expert Instructors</h3>
+              <p className="text-navy-400">
+                Learn from industry professionals who have worked at top companies and built production applications.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +173,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,18 +189,23 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="relative">
+              <span className="text-6xl mb-6 block">🚀</span>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today. 
+                Your first lesson is just a click away!
+              </p>
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
