@@ -1,17 +1,24 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total hours from all courses
+  const totalHours = courses.reduce((sum, course) => {
+    return sum + (course.metadata?.estimated_hours || 0)
+  }, 0)
 
   return (
     <div>
@@ -57,6 +64,13 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Progress Section - NEW! */}
+      <LearningProgress 
+        totalCourses={courses.length}
+        totalLessons={lessons.length}
+        totalHours={totalHours}
+      />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
