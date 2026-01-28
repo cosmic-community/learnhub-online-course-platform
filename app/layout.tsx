@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import DailyTip from '@/components/DailyTip'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -30,6 +31,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <DailyTip />
         <CosmicBadge bucketSlug={bucketSlug} />
       </body>
     </html>
