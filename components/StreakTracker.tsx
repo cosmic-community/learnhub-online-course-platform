@@ -9,7 +9,12 @@ interface StreakData {
   longestStreak: number
 }
 
-const motivationalQuotes = [
+interface Quote {
+  text: string
+  author: string
+}
+
+const motivationalQuotes: Quote[] = [
   { text: "Every expert was once a beginner.", author: "Helen Hayes" },
   { text: "The more you learn, the more you earn.", author: "Warren Buffett" },
   { text: "Education is not preparation for life; education is life itself.", author: "John Dewey" },
@@ -24,13 +29,15 @@ const milestones = [3, 7, 14, 30, 50, 100, 365]
 
 export default function StreakTracker() {
   const [streakData, setStreakData] = useState<StreakData | null>(null)
-  const [quote, setQuote] = useState(motivationalQuotes[0])
+  const [quote, setQuote] = useState<Quote>(motivationalQuotes[0])
   const [showCelebration, setShowCelebration] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const getDateString = (date: Date) => {
-    return date.toISOString().split('T')[0]
+  // Changed: Return string type explicitly with fallback
+  const getDateString = (date: Date): string => {
+    const dateStr = date.toISOString().split('T')[0]
+    return dateStr ?? new Date().toISOString().slice(0, 10)
   }
 
   const initializeStreak = useCallback(() => {
@@ -39,7 +46,9 @@ export default function StreakTracker() {
     
     if (stored) {
       const data: StreakData = JSON.parse(stored)
-      const lastVisit = new Date(data.lastVisit)
+      // Changed: Handle potentially undefined lastVisit with fallback
+      const lastVisitStr = data.lastVisit ?? today
+      const lastVisit = new Date(lastVisitStr)
       const todayDate = new Date(today)
       const diffTime = todayDate.getTime() - lastVisit.getTime()
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
@@ -94,11 +103,19 @@ export default function StreakTracker() {
     
     // Rotate quotes every 10 seconds
     const quoteInterval = setInterval(() => {
-      setQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)])
+      const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
+      // Changed: Ensure we always have a valid quote
+      if (randomQuote) {
+        setQuote(randomQuote)
+      }
     }, 10000)
 
     // Set random initial quote
-    setQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)])
+    const initialQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
+    // Changed: Ensure we always have a valid quote
+    if (initialQuote) {
+      setQuote(initialQuote)
+    }
 
     return () => clearInterval(quoteInterval)
   }, [initializeStreak])
@@ -244,7 +261,7 @@ export default function StreakTracker() {
                 <span className="text-primary-400 text-lg">💡</span>
                 <div>
                   <p className="text-navy-200 text-sm italic leading-relaxed">
-                    "{quote.text}"
+                    &quot;{quote.text}&quot;
                   </p>
                   <p className="text-navy-500 text-xs mt-1">— {quote.author}</p>
                 </div>
