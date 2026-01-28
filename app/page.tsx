@@ -1,14 +1,16 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import MotivationalBanner from '@/components/MotivationalBanner'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
@@ -56,6 +58,11 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Motivational Banner */}
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <MotivationalBanner coursesCount={courses.length} lessonsCount={lessons.length} />
       </section>
 
       {/* Featured Courses */}
