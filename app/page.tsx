@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +27,12 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Gamification teaser */}
+            <div className="inline-flex items-center gap-2 bg-orange-500/20 text-orange-400 px-4 py-2 rounded-full text-sm font-medium mb-6 animate-pulse">
+              <span>🔥</span>
+              <span>Build your learning streak & earn achievements!</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,10 +52,14 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
@@ -81,6 +96,50 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Highlight */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-orange-500/10 via-primary-500/10 to-purple-500/10 rounded-3xl p-8 md:p-12 border border-navy-800">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  🎮 Learn with Gamification
+                </h2>
+                <p className="text-navy-300 mb-6">
+                  Track your daily learning streak, celebrate completing lessons with confetti, 
+                  and watch your progress grow! Learning should be fun and rewarding.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3 text-navy-200">
+                    <span className="text-orange-400">🔥</span>
+                    <span>Daily learning streak tracking</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-navy-200">
+                    <span className="text-primary-400">🎉</span>
+                    <span>Confetti celebrations on completion</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-navy-200">
+                    <span className="text-purple-400">📊</span>
+                    <span>Visual progress indicators</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="flex justify-center">
+                <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-xl shadow-orange-500/20 transform rotate-3 hover:rotate-0 transition-transform">
+                  <div className="flex items-center gap-4">
+                    <span className="text-5xl">🔥</span>
+                    <div>
+                      <div className="text-4xl font-bold">7 Days</div>
+                      <div className="text-orange-100">Learning Streak</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
