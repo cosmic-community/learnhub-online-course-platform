@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import LearningStreak from './LearningStreak'
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -38,8 +39,9 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA with Streak */}
           <div className="hidden md:flex items-center gap-4">
+            <LearningStreak />
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
@@ -67,6 +69,10 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-navy-800">
             <nav className="flex flex-col gap-4">
+              {/* Mobile Streak Widget */}
+              <div className="flex justify-center pb-2">
+                <LearningStreak />
+              </div>
               <Link
                 href="/courses"
                 className="text-navy-300 hover:text-white transition-colors py-2"
