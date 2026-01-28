@@ -25,11 +25,15 @@ const motivationalQuotes: Quote[] = [
   { text: "The only person who is educated is the one who has learned how to learn and change.", author: "Carl Rogers" },
 ]
 
+// Changed: Define default quote constant to avoid undefined issues
+const defaultQuote: Quote = { text: "Every expert was once a beginner.", author: "Helen Hayes" }
+
 const milestones = [3, 7, 14, 30, 50, 100, 365]
 
 export default function StreakTracker() {
   const [streakData, setStreakData] = useState<StreakData | null>(null)
-  const [quote, setQuote] = useState<Quote>(motivationalQuotes[0])
+  // Changed: Use defaultQuote instead of potentially undefined array access
+  const [quote, setQuote] = useState<Quote>(defaultQuote)
   const [showCelebration, setShowCelebration] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -103,7 +107,8 @@ export default function StreakTracker() {
     
     // Rotate quotes every 10 seconds
     const quoteInterval = setInterval(() => {
-      const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
+      const randomIndex = Math.floor(Math.random() * motivationalQuotes.length)
+      const randomQuote = motivationalQuotes[randomIndex]
       // Changed: Ensure we always have a valid quote
       if (randomQuote) {
         setQuote(randomQuote)
@@ -111,7 +116,8 @@ export default function StreakTracker() {
     }, 10000)
 
     // Set random initial quote
-    const initialQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
+    const initialIndex = Math.floor(Math.random() * motivationalQuotes.length)
+    const initialQuote = motivationalQuotes[initialIndex]
     // Changed: Ensure we always have a valid quote
     if (initialQuote) {
       setQuote(initialQuote)
