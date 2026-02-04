@@ -1,4 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
+import { Resend } from 'resend'
 import type { Course, Lesson, Category, Instructor, ContactFormData } from '@/types'
 
 export const cosmic = createBucketClient({
@@ -7,6 +8,9 @@ export const cosmic = createBucketClient({
   writeKey: process.env.COSMIC_WRITE_KEY as string,
   apiEnvironment: 'staging',
 })
+
+// Initialize Resend for email sending
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Helper function to check for status errors
 function hasStatus(error: unknown): error is { status: number } {
@@ -195,12 +199,13 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   }
 }
 
-// Submit contact form
+// Submit contact form and send email notification
 export async function submitContactForm(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
   try {
     const submittedAt = new Date().toISOString()
     const slug = `contact-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
     
+    // Save to Cosmic CMS
     await cosmic.objects.insertOne({
       title: `Contact from ${data.name}`,
       slug,
@@ -212,6 +217,24 @@ export async function submitContactForm(data: ContactFormData): Promise<{ succes
         message: data.message,
         submitted_at: submittedAt,
       },
+    })
+    
+    // Send email notification using Resend
+    // Changed: Added email sending functionality
+    await resend.emails.send({
+      from: 'tony@cosmicjs.com',
+      to: 'tony@cosmicjs.com',
+      subject: `LearnHub Contact Form: ${data.subject}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>From:</strong> ${data.name} (${data.email})</p>
+        <p><strong>Subject:</strong> ${data.subject}</p>
+        <p><strong>Message:</strong></p>
+        <p>${data.message.replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p style="color: #666; font-size: 12px;">Submitted at: ${new Date(submittedAt).toLocaleString()}</p>
+      `,
+      replyTo: data.email,
     })
     
     return { success: true }
