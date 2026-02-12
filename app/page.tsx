@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -20,8 +25,24 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
+        {/* Floating achievement hint */}
+        <div className="absolute top-8 right-8 hidden lg:block animate-float">
+          <div className="bg-navy-800/80 backdrop-blur-sm border border-navy-700 rounded-xl px-4 py-3 flex items-center gap-3">
+            <span className="text-2xl">🎯</span>
+            <div>
+              <div className="text-white text-sm font-medium">Track Your Progress</div>
+              <div className="text-navy-400 text-xs">Earn achievements as you learn!</div>
+            </div>
+          </div>
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span className="text-primary-400 text-sm font-medium">Start your streak today!</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,8 +52,9 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
+              <Link href="/courses" className="btn-primary text-lg group">
+                <span>Browse Courses</span>
+                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
@@ -41,18 +63,52 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          <div className="mt-16 grid grid-cols-4 gap-8 max-w-3xl mx-auto">
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Achievement Teaser Section */}
+      <section className="py-12 bg-gradient-to-r from-primary-500/5 via-primary-500/10 to-primary-500/5 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-2">
+                <span className="text-3xl bg-navy-800 rounded-full p-2 border-2 border-navy-700">🎯</span>
+                <span className="text-3xl bg-navy-800 rounded-full p-2 border-2 border-navy-700">🔥</span>
+                <span className="text-3xl bg-navy-800 rounded-full p-2 border-2 border-navy-700">🎓</span>
+                <span className="text-3xl bg-navy-800 rounded-full p-2 border-2 border-navy-700">🌟</span>
+              </div>
+              <div>
+                <h3 className="text-white font-bold">Earn Achievements</h3>
+                <p className="text-navy-400 text-sm">Track progress, build streaks, unlock badges!</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2 bg-navy-800/50 rounded-lg px-4 py-2">
+                <span>🏆</span>
+                <span className="text-navy-300">9 achievements to unlock</span>
+              </div>
+              <div className="flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 rounded-lg px-4 py-2">
+                <span>🔥</span>
+                <span className="text-orange-400">Daily streaks</span>
+              </div>
             </div>
           </div>
         </div>
@@ -120,16 +176,23 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
+          <div className="card p-12 relative overflow-hidden">
+            <div className="absolute top-4 right-4 text-6xl opacity-10">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
+              Build your streak, earn achievements, and level up!
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
+            <p className="mt-6 text-sm text-navy-500">
+              ✨ Track your progress • 🔥 Build streaks • 🏆 Unlock achievements
+            </p>
           </div>
         </div>
       </section>
