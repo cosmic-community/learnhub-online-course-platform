@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
@@ -7,6 +10,7 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
   const { metadata } = course
   const thumbnail = metadata?.thumbnail
   const instructors = metadata?.instructors || []
@@ -14,7 +18,12 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link 
+      href={`/courses/${course.slug}`} 
+      className="card group block"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -23,7 +32,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             alt={course.title}
             width={400}
             height={225}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`w-full h-full object-cover transition-transform duration-700 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-navy-700 to-navy-800 flex items-center justify-center">
@@ -31,15 +40,27 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Overlay gradient on hover */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse">Free</span>
           ) : (
             <span className="badge bg-navy-900/90 text-white">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+
+        {/* Play button on hover */}
+        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="w-16 h-16 rounded-full bg-primary-500/90 flex items-center justify-center transform transition-transform duration-300 hover:scale-110">
+            <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -51,7 +72,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             {categories.slice(0, 2).map((category) => (
               <span
                 key={category.id}
-                className="text-xs text-navy-400"
+                className="text-xs text-navy-400 transition-colors group-hover:text-primary-400"
               >
                 {category.metadata?.icon} {category.metadata?.name || category.title}
               </span>
@@ -101,14 +122,14 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
                 👨‍🏫
               </div>
             )}
-            <span className="text-sm text-navy-300">
+            <span className="text-sm text-navy-300 group-hover:text-white transition-colors">
               {instructors[0].metadata?.name || instructors[0].title}
             </span>
           </div>
