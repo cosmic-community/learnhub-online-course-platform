@@ -1,14 +1,18 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickStats from '@/components/QuickStats'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
@@ -39,27 +43,32 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
+        </div>
+      </section>
+
+      {/* Quick Stats Section - Animated */}
+      <section className="py-16 -mt-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <QuickStats 
+            totalCourses={courses.length}
+            totalLessons={lessons.length}
+            totalInstructors={instructors.length}
+          />
+        </div>
+      </section>
+
+      {/* Learning Streak & Daily Tip Section */}
+      <section className="py-12 bg-navy-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <LearningStreak />
+            <DailyTip />
           </div>
         </div>
       </section>
 
       {/* Featured Courses */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -86,7 +95,7 @@ export default async function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +111,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,14 +127,16 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-6">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
+              Build your streak and become a Learning Legend!
             </p>
             <Link href="/courses" className="btn-primary text-lg">
               Get Started Now
