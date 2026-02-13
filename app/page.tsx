@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((total, course) => {
+    return total + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +27,10 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span>Track your daily learning streak!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,16 +50,20 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
@@ -81,6 +94,33 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Daily Streak Promo */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 p-8 md:p-12">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+            <div className="relative flex flex-col md:flex-row items-center gap-8">
+              <div className="text-6xl md:text-8xl">🔥</div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Build Your Learning Streak!
+                </h3>
+                <p className="text-navy-300 mb-4 max-w-xl">
+                  Visit daily to build your streak and unlock achievements. 
+                  Consistent learning is the key to mastery. See your streak in the bottom left corner!
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <span className="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm">🌱 Day 1</span>
+                  <span className="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm">🔥 Week Streak</span>
+                  <span className="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm">🏆 Month Master</span>
+                  <span className="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm">👑 Legend</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
