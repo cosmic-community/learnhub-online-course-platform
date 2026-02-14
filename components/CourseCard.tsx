@@ -1,6 +1,11 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
+import ProgressRing from './ProgressRing'
+import { getCourseProgress } from './LearningProgress'
 
 interface CourseCardProps {
   course: Course
@@ -12,6 +17,21 @@ export default function CourseCard({ course }: CourseCardProps) {
   const instructors = metadata?.instructors || []
   const categories = metadata?.categories || []
   const lessons = metadata?.lessons || []
+  
+  const [progress, setProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    setProgress(getCourseProgress(course.slug, lessons.length))
+    
+    // Listen for progress updates
+    const handleUpdate = () => {
+      setProgress(getCourseProgress(course.slug, lessons.length))
+    }
+    window.addEventListener('progress-updated', handleUpdate)
+    return () => window.removeEventListener('progress-updated', handleUpdate)
+  }, [course.slug, lessons.length])
 
   return (
     <Link href={`/courses/${course.slug}`} className="card group block">
@@ -41,6 +61,23 @@ export default function CourseCard({ course }: CourseCardProps) {
             </span>
           )}
         </div>
+
+        {/* Progress Ring - Only show if progress exists */}
+        {mounted && progress > 0 && (
+          <div className="absolute top-4 left-4 bg-navy-900/90 rounded-full p-1">
+            <ProgressRing progress={progress} size={36} strokeWidth={3} />
+          </div>
+        )}
+
+        {/* Completion Badge */}
+        {mounted && progress === 100 && (
+          <div className="absolute bottom-4 left-4 bg-green-500/90 text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Completed
+          </div>
+        )}
       </div>
 
       {/* Content */}

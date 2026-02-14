@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import ProgressStats from '@/components/ProgressStats'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,13 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Prepare course info for progress stats
+  const courseInfo = courses.map(course => ({
+    slug: course.slug,
+    title: course.title,
+    totalLessons: course.metadata?.lessons?.length || 0
+  }))
 
   return (
     <div>
@@ -55,6 +63,13 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Progress Stats - Shows personalized learning journey */}
+      <section className="py-8 -mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ProgressStats courses={courseInfo} />
         </div>
       </section>
 
