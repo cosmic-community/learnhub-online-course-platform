@@ -1,17 +1,25 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgressTracker from '@/components/LearningProgressTracker'
+import QuickSearchBar from '@/components/QuickSearchBar'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours from courses
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
 
   return (
     <div>
@@ -30,6 +38,12 @@ export default async function HomePage() {
               Master web development, design, and more with expert-led courses. 
               Start your learning journey today.
             </p>
+            
+            {/* Quick Search Bar */}
+            <div className="mb-10">
+              <QuickSearchBar courses={courses} categories={categories} />
+            </div>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
@@ -39,22 +53,17 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
-          </div>
+        </div>
+      </section>
+
+      {/* Learning Progress Tracker */}
+      <section className="py-12 -mt-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LearningProgressTracker 
+            totalCourses={courses.length} 
+            totalLessons={lessons.length} 
+            totalHours={totalHours}
+          />
         </div>
       </section>
 
