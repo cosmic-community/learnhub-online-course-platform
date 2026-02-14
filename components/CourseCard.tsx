@@ -1,20 +1,33 @@
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
+import TrendingBadge from './TrendingBadge'
 
 interface CourseCardProps {
   course: Course
+  showTrending?: boolean
 }
 
-export default function CourseCard({ course }: CourseCardProps) {
+export default function CourseCard({ course, showTrending = false }: CourseCardProps) {
   const { metadata } = course
   const thumbnail = metadata?.thumbnail
   const instructors = metadata?.instructors || []
   const categories = metadata?.categories || []
   const lessons = metadata?.lessons || []
 
+  // Determine if course should show trending badge (simple logic - can be enhanced)
+  const isTrending = showTrending || (lessons.length >= 3 && metadata?.price && metadata.price > 0)
+  const isNew = course.slug.includes('nodejs') || course.slug.includes('aws')
+
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block relative">
+      {/* Trending/New Badge */}
+      {(isTrending || isNew) && (
+        <div className="absolute top-4 left-4 z-10">
+          <TrendingBadge variant={isNew ? 'new' : 'fire'} />
+        </div>
+      )}
+
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -30,6 +43,18 @@ export default function CourseCard({ course }: CourseCardProps) {
             <span className="text-5xl">📚</span>
           </div>
         )}
+        
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Play button on hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-100 scale-75">
+          <div className="w-16 h-16 rounded-full bg-primary-500/90 flex items-center justify-center shadow-2xl">
+            <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
         
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
@@ -101,7 +126,7 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
