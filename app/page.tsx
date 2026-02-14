@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
+import QuickStartCard from '@/components/QuickStartCard'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,16 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
+  // Calculate total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
 
   return (
     <div>
@@ -58,8 +70,27 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Learning Progress & Quick Start Section */}
+      <section className="py-12 bg-navy-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            {/* Learning Progress */}
+            <LearningProgress 
+              totalCourses={courses.length}
+              totalLessons={totalLessons}
+              totalHours={totalHours}
+            />
+            
+            {/* Quick Start Cards */}
+            <div className="space-y-6">
+              <QuickStartCard courses={courses} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -86,7 +117,7 @@ export default async function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +133,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,18 +149,25 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute top-0 left-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            
+            <div className="relative">
+              <div className="text-5xl mb-6">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <Link href="/courses" className="btn-primary text-lg animate-pulse-glow">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
