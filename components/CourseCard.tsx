@@ -31,6 +31,9 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Overlay gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
@@ -40,6 +43,15 @@ export default function CourseCard({ course }: CourseCardProps) {
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+        
+        {/* Play button overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <div className="w-14 h-14 bg-primary-500/90 rounded-full flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-lg shadow-primary-500/30">
+            <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -101,10 +113,10 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all">
                 👨‍🏫
               </div>
             )}
