@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
@@ -7,6 +10,7 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
   const { metadata } = course
   const thumbnail = metadata?.thumbnail
   const instructors = metadata?.instructors || []
@@ -14,7 +18,15 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link 
+      href={`/courses/${course.slug}`} 
+      className="card group block relative overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Hover glow effect */}
+      <div className={`absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+      
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -31,20 +43,34 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse">Free</span>
           ) : (
-            <span className="badge bg-navy-900/90 text-white">
+            <span className="badge bg-navy-900/90 text-white backdrop-blur-sm">
               ${metadata?.price || 0}
             </span>
           )}
         </div>
+
+        {/* Quick view hint */}
+        <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <span className="inline-flex items-center gap-2 text-white text-sm font-medium">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            View Course
+          </span>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 relative">
         {/* Categories */}
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
@@ -101,10 +127,10 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm ring-2 ring-navy-600">
                 👨‍🏫
               </div>
             )}
