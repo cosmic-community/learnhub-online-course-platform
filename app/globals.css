@@ -48,6 +48,30 @@
   }
 }
 
+/* Custom animations for learning streak celebration */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(1.5);
+  }
+}
+
+.animate-float-up {
+  animation: float-up 2s ease-out forwards;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-navy-200 leading-relaxed;
