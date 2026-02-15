@@ -48,6 +48,74 @@
   }
 }
 
+/* Animation utilities */
+@layer utilities {
+  .animate-in {
+    animation: animate-in 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .fade-in {
+    --tw-enter-opacity: 0;
+  }
+  
+  .slide-in-from-bottom-4 {
+    --tw-enter-translate-y: 1rem;
+  }
+  
+  .slide-in-from-top-2 {
+    --tw-enter-translate-y: -0.5rem;
+  }
+  
+  .slide-in-from-top-4 {
+    --tw-enter-translate-y: -1rem;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease-in-out infinite;
+  }
+}
+
+@keyframes animate-in {
+  from {
+    opacity: var(--tw-enter-opacity, 0);
+    transform: translateY(var(--tw-enter-translate-y, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-navy-200 leading-relaxed;
@@ -104,4 +172,55 @@
 
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-navy-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-navy-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-navy-600;
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #14b8a6;
+  cursor: pointer;
+  border: 2px solid #0f172a;
+  margin-top: -6px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #1e293b;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
 }

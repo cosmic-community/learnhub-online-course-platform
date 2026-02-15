@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Header from '@/components/Header'
+import HeaderWrapper from '@/components/HeaderWrapper'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
 
@@ -25,7 +25,7 @@ export default function RootLayout({
         <script src="/dashboard-console-capture.js" />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Header />
+        <HeaderWrapper />
         <main className="flex-1">
           {children}
         </main>
