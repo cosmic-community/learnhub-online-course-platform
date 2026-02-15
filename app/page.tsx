@@ -13,6 +13,16 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
+  // Calculate total hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +32,11 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="animate-pulse-glow w-2 h-2 bg-primary-400 rounded-full" />
+              <span className="text-primary-400 text-sm font-medium">New courses added weekly</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -40,19 +55,23 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          {/* Enhanced Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4">
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4">
+              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
             </div>
           </div>
         </div>
@@ -81,6 +100,32 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Streak Promo Banner */}
+      <section className="py-12 bg-gradient-to-r from-primary-600/20 via-primary-500/10 to-navy-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="text-5xl animate-fire">🔥</div>
+              <div>
+                <h3 className="text-xl font-bold text-white">Build Your Learning Streak!</h3>
+                <p className="text-navy-300">Visit daily to unlock achievements and track your progress</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {[1, 3, 7, 30, 100].map((milestone) => (
+                <div
+                  key={milestone}
+                  className="flex flex-col items-center bg-navy-800/50 rounded-lg px-3 py-2"
+                >
+                  <span className="text-lg font-bold text-primary-400">{milestone}</span>
+                  <span className="text-xs text-navy-400">days</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
