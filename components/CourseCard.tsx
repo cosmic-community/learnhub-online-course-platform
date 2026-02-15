@@ -14,7 +14,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block hover:scale-[1.02] transition-transform duration-300">
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -31,15 +31,29 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Overlay gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse-slow">Free</span>
           ) : (
-            <span className="badge bg-navy-900/90 text-white">
+            <span className="badge bg-navy-900/90 text-white backdrop-blur-sm">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+
+        {/* Quick action on hover */}
+        <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <span className="inline-flex items-center gap-2 text-white text-sm font-medium">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Start Learning
+          </span>
         </div>
       </div>
 
@@ -101,7 +115,7 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
