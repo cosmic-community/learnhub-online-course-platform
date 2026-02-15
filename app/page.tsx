@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathQuiz from '@/components/LearningPathQuiz'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -133,6 +134,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Path Quiz - Floating Button */}
+      <LearningPathQuiz courses={courses} />
     </div>
   )
 }
