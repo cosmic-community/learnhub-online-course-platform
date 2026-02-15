@@ -105,3 +105,41 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Changed: Added animation utilities for gamification features */
+@layer utilities {
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px theme('colors.primary.500'), 0 0 10px theme('colors.primary.500');
+  }
+  to {
+    box-shadow: 0 0 10px theme('colors.primary.500'), 0 0 20px theme('colors.primary.500'), 0 0 30px theme('colors.primary.500');
+  }
+}
+
+/* Changed: Added smooth transitions for interactive elements */
+.transition-bounce {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
