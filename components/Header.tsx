@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import StreakCounter from './StreakCounter'
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -38,8 +39,9 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA & Streak */}
           <div className="hidden md:flex items-center gap-4">
+            <StreakCounter />
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
@@ -66,6 +68,10 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-navy-800">
+            {/* Mobile Streak Counter */}
+            <div className="mb-4 flex justify-center">
+              <StreakCounter />
+            </div>
             <nav className="flex flex-col gap-4">
               <Link
                 href="/courses"
