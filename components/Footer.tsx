@@ -9,14 +9,24 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">📚</span>
-              <span className="text-xl font-bold text-white">LearnHub</span>
+            <Link href="/" className="flex items-center gap-2 mb-4 group">
+              <span className="text-2xl group-hover:animate-bounce-slow">📚</span>
+              <span className="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">LearnHub</span>
             </Link>
-            <p className="text-navy-400 max-w-md">
+            <p className="text-navy-400 max-w-md mb-4">
               Empowering learners worldwide with high-quality courses in web development, 
               design, and more. Start your learning journey today.
             </p>
+            {/* Social proof */}
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-primary-500/20 border-2 border-navy-900 flex items-center justify-center text-xs">👨</div>
+                <div className="w-8 h-8 rounded-full bg-primary-500/20 border-2 border-navy-900 flex items-center justify-center text-xs">👩</div>
+                <div className="w-8 h-8 rounded-full bg-primary-500/20 border-2 border-navy-900 flex items-center justify-center text-xs">👨</div>
+                <div className="w-8 h-8 rounded-full bg-primary-500/20 border-2 border-navy-900 flex items-center justify-center text-xs">+</div>
+              </div>
+              <span className="text-sm text-navy-400">Join 10,000+ learners</span>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -24,18 +34,18 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/courses" className="text-navy-400 hover:text-primary-400 transition-colors">
-                  All Courses
+                <Link href="/courses" className="text-navy-400 hover:text-primary-400 transition-colors flex items-center gap-2 group">
+                  <span className="group-hover:translate-x-1 transition-transform">→</span> All Courses
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-navy-400 hover:text-primary-400 transition-colors">
-                  Categories
+                <Link href="/categories" className="text-navy-400 hover:text-primary-400 transition-colors flex items-center gap-2 group">
+                  <span className="group-hover:translate-x-1 transition-transform">→</span> Categories
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-navy-400 hover:text-primary-400 transition-colors">
-                  Contact Us
+                <Link href="/contact" className="text-navy-400 hover:text-primary-400 transition-colors flex items-center gap-2 group">
+                  <span className="group-hover:translate-x-1 transition-transform">→</span> Contact Us
                 </Link>
               </li>
             </ul>
@@ -51,8 +61,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories/design" className="text-navy-400 hover:text-primary-400 transition-colors">
-                  🎨 Design
+                <Link href="/categories/cloud-computing" className="text-navy-400 hover:text-primary-400 transition-colors">
+                  ☁️ Cloud Computing
+                </Link>
+              </li>
+              <li>
+                <Link href="/categories/mobile-development" className="text-navy-400 hover:text-primary-400 transition-colors">
+                  📱 Mobile Development
                 </Link>
               </li>
             </ul>
@@ -60,8 +75,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-navy-800 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-navy-500 text-sm">
-            © {currentYear} LearnHub. All rights reserved.
+          <p className="text-navy-500 text-sm flex items-center gap-2">
+            © {currentYear} LearnHub. Made with <span className="text-red-500 animate-pulse">❤️</span> for learners everywhere.
           </p>
           <p className="text-navy-500 text-sm">
             Powered by{' '}
@@ -69,7 +84,7 @@ export default function Footer() {
               href="https://www.cosmicjs.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-400 hover:text-primary-300"
+              className="text-primary-400 hover:text-primary-300 transition-colors"
             >
               Cosmic
             </a>

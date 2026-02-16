@@ -46,6 +46,195 @@
   .badge-free {
     @apply bg-primary-500/20 text-primary-400;
   }
+
+  /* Stat card hover effect */
+  .stat-card {
+    @apply p-4 rounded-xl bg-navy-900/30 border border-transparent hover:border-primary-500/30 transition-all duration-300;
+  }
+
+  /* Achievement badges */
+  .achievement-badge {
+    @apply flex flex-col items-center justify-center w-20 h-20 rounded-xl transition-all duration-300;
+  }
+  
+  .achievement-unlocked {
+    @apply bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 hover:scale-110 hover:shadow-lg hover:shadow-primary-500/20;
+  }
+  
+  .achievement-locked {
+    @apply bg-navy-900/50 border border-navy-700 grayscale opacity-60;
+  }
+}
+
+/* Custom animations */
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes celebrate {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  75% {
+    transform: scale(1.1) rotate(3deg);
+  }
+}
+
+@keyframes flame {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.15) rotate(0deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes firework {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-celebrate {
+  animation: celebrate 0.6s ease-out;
+}
+
+.animate-flame {
+  animation: flame 0.5s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
+}
+
+/* Floating particles */
+.particle {
+  @apply absolute w-2 h-2 rounded-full bg-primary-500/30;
+  animation: float 6s ease-in-out infinite;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.particle-3 {
+  bottom: 30%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+/* Fireworks */
+.firework {
+  @apply absolute rounded-full;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.4) 0%, transparent 70%);
+  animation: firework 1s ease-out forwards;
+}
+
+.firework-1 {
+  top: 20%;
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.firework-2 {
+  top: 30%;
+  right: 25%;
+  animation-delay: 0.3s;
+}
+
+.firework-3 {
+  bottom: 40%;
+  left: 50%;
+  animation-delay: 0.6s;
 }
 
 /* Prose styles for markdown content */
