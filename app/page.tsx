@@ -3,6 +3,10 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import AchievementBadges from '@/components/AchievementBadges'
+import QuickStatsCard from '@/components/QuickStatsCard'
+import RecentlyViewed from '@/components/RecentlyViewed'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -53,6 +57,38 @@ export default async function HomePage() {
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Dashboard - NEW SECTION */}
+      <section className="py-12 bg-gradient-to-b from-navy-950 to-navy-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2">Your Learning Dashboard</h2>
+            <p className="text-navy-400">Track your progress and earn achievements</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Learning Streak */}
+            <div className="lg:col-span-1">
+              <LearningStreak />
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="lg:col-span-1">
+              <QuickStatsCard />
+            </div>
+            
+            {/* Achievements */}
+            <div className="lg:col-span-1">
+              <AchievementBadges />
+            </div>
+            
+            {/* Recently Viewed */}
+            <div className="lg:col-span-1">
+              <RecentlyViewed />
             </div>
           </div>
         </div>
