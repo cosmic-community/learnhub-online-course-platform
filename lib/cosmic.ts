@@ -178,6 +178,23 @@ export async function getLessons(): Promise<Lesson[]> {
   }
 }
 
+// Get total lesson count (for stats)
+export async function getLessonsCount(): Promise<number> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'lessons' })
+      .props(['id'])
+      .limit(1)
+    
+    return response.total || 0
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return 0
+    }
+    return 0
+  }
+}
+
 // Get single lesson by slug
 export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   try {
