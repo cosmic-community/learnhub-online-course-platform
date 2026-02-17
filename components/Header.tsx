@@ -2,8 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import SearchModal from './SearchModal'
+import type { Course, Category, Instructor } from '@/types'
 
-export default function Header() {
+interface HeaderProps {
+  courses?: Course[]
+  categories?: Category[]
+  instructors?: Instructor[]
+}
+
+export default function Header({ courses = [], categories = [], instructors = [] }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
@@ -11,8 +19,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-2xl transform transition-transform duration-300 group-hover:rotate-12">📚</span>
             <span className="text-xl font-bold text-white">LearnHub</span>
           </Link>
 
@@ -20,26 +28,34 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Courses
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full" />
             </Link>
             <Link
               href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Categories
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full" />
             </Link>
             <Link
               href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full" />
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Search + CTA */}
           <div className="hidden md:flex items-center gap-4">
+            <SearchModal 
+              courses={courses} 
+              categories={categories} 
+              instructors={instructors} 
+            />
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
@@ -65,7 +81,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-navy-800">
+          <div className="md:hidden py-4 border-t border-navy-800 animate-slideDown">
             <nav className="flex flex-col gap-4">
               <Link
                 href="/courses"
