@@ -20,7 +20,7 @@ export default function RootLayout({
   const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string
   
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
         <script src="/dashboard-console-capture.js" />
       </head>
