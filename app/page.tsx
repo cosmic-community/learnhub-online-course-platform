@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import WelcomeHero from '@/components/WelcomeHero'
+import LearningTip from '@/components/LearningTip'
+import QuickStartGuide from '@/components/QuickStartGuide'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -15,46 +18,20 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Learn skills that
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
-            </h1>
-            <p className="text-xl text-navy-300 mb-8">
-              Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
-              </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
-            </div>
-          </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
-          </div>
+      {/* Hero Section with animations */}
+      <WelcomeHero 
+        courseCount={courses.length}
+        instructorCount={instructors.length}
+        categoryCount={categories.length}
+      />
+
+      {/* Quick Start Guide */}
+      <QuickStartGuide />
+
+      {/* Learning Tip Section */}
+      <section className="py-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LearningTip />
         </div>
       </section>
 
@@ -63,7 +40,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Featured Courses</h2>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">🔥</span>
+                <h2 className="text-3xl font-bold text-white">Featured Courses</h2>
+              </div>
               <p className="text-navy-400">Start learning with our most popular courses</p>
             </div>
             <Link href="/courses" className="btn-secondary hidden sm:inline-flex">
@@ -89,7 +69,10 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="text-2xl">🗂️</span>
+              <h2 className="text-3xl font-bold text-white">Browse by Category</h2>
+            </div>
             <p className="text-navy-400">Find the perfect course for your learning goals</p>
           </div>
           
@@ -105,7 +88,10 @@ export default async function HomePage() {
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="text-2xl">⭐</span>
+              <h2 className="text-3xl font-bold text-white">Meet Our Instructors</h2>
+            </div>
             <p className="text-navy-400">Learn from industry experts with real-world experience</p>
           </div>
           
@@ -117,19 +103,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section with gradient */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500/20 via-navy-900 to-navy-900 border border-primary-500/20 p-12">
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-48 h-48 bg-primary-500/10 rounded-full blur-2xl" />
+            
+            <div className="relative">
+              <span className="text-5xl mb-4 block">🚀</span>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg max-w-2xl mx-auto">
+                Join thousands of students and start your journey to mastering new skills today.
+                Your future self will thank you!
+              </p>
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
