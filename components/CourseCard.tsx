@@ -14,7 +14,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block hover:transform hover:-translate-y-2 transition-all duration-300">
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -23,23 +23,35 @@ export default function CourseCard({ course }: CourseCardProps) {
             alt={course.title}
             width={400}
             height={225}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-navy-700 to-navy-800 flex items-center justify-center">
-            <span className="text-5xl">📚</span>
+            <span className="text-5xl group-hover:scale-110 transition-transform duration-300">📚</span>
           </div>
         )}
+        
+        {/* Overlay gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse">Free</span>
           ) : (
-            <span className="badge bg-navy-900/90 text-white">
+            <span className="badge bg-navy-900/90 text-white backdrop-blur-sm">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+        
+        {/* Play icon on hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-16 h-16 rounded-full bg-primary-500/90 flex items-center justify-center backdrop-blur-sm transform scale-75 group-hover:scale-100 transition-transform duration-300">
+            <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -51,7 +63,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             {categories.slice(0, 2).map((category) => (
               <span
                 key={category.id}
-                className="text-xs text-navy-400"
+                className="text-xs text-navy-400 bg-navy-800/50 px-2 py-1 rounded-md"
               >
                 {category.metadata?.icon} {category.metadata?.name || category.title}
               </span>
@@ -101,14 +113,14 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all">
                 👨‍🏫
               </div>
             )}
-            <span className="text-sm text-navy-300">
+            <span className="text-sm text-navy-300 group-hover:text-navy-200 transition-colors">
               {instructors[0].metadata?.name || instructors[0].title}
             </span>
           </div>
