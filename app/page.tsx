@@ -1,14 +1,18 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import DailyTip from '@/components/DailyTip'
+import QuickStats from '@/components/QuickStats'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
@@ -40,19 +44,36 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
+          {/* Quick Stats with Animation */}
+          <div className="mt-16">
+            <QuickStats 
+              totalCourses={courses.length}
+              totalLessons={lessons.length}
+              totalInstructors={instructors.length}
+              totalCategories={categories.length}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Progress & Tips Section */}
+      <section className="py-12 bg-navy-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Learning Streak */}
+            <div>
+              <h2 className="text-sm font-semibold text-navy-400 uppercase tracking-wider mb-3">
+                Your Progress
+              </h2>
+              <LearningStreak />
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            
+            {/* Daily Tip */}
+            <div>
+              <h2 className="text-sm font-semibold text-navy-400 uppercase tracking-wider mb-3">
+                Learning Tip of the Day
+              </h2>
+              <DailyTip />
             </div>
           </div>
         </div>
@@ -117,19 +138,43 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Motivation Quote Section */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-primary-500/10 to-primary-500/5" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-5xl mb-6">💭</div>
+          <blockquote className="text-2xl md:text-3xl font-light text-white italic mb-4">
+            "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice."
+          </blockquote>
+          <cite className="text-navy-400 not-italic">— Brian Herbert</cite>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-500/10 rounded-full blur-xl" />
+            
+            <div className="relative">
+              <div className="text-4xl mb-4">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Get Started Now
+                </Link>
+                <Link href="/contact" className="btn-secondary text-lg">
+                  Have Questions?
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
