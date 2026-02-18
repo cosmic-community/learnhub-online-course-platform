@@ -11,8 +11,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-2xl group-hover:animate-bounce">📚</span>
             <span className="text-xl font-bold text-white">LearnHub</span>
           </Link>
 
@@ -20,28 +20,39 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors flex items-center gap-1"
             >
+              <span>📖</span>
               Courses
             </Link>
             <Link
               href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors flex items-center gap-1"
             >
+              <span>🏷️</span>
               Categories
             </Link>
             <Link
-              href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
+              href="/instructors"
+              className="text-navy-300 hover:text-white transition-colors flex items-center gap-1"
             >
+              <span>👨‍🏫</span>
+              Instructors
+            </Link>
+            <Link
+              href="/contact"
+              className="text-navy-300 hover:text-white transition-colors flex items-center gap-1"
+            >
+              <span>✉️</span>
               Contact
             </Link>
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/courses" className="btn-primary">
-              Start Learning
+            <Link href="/courses" className="btn-primary group">
+              <span>Start Learning</span>
+              <span className="ml-1 group-hover:translate-x-1 transition-transform inline-block">→</span>
             </Link>
           </div>
 
@@ -69,23 +80,34 @@ export default function Header() {
             <nav className="flex flex-col gap-4">
               <Link
                 href="/courses"
-                className="text-navy-300 hover:text-white transition-colors py-2"
+                className="text-navy-300 hover:text-white transition-colors py-2 flex items-center gap-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
+                <span>📖</span>
                 Courses
               </Link>
               <Link
                 href="/categories"
-                className="text-navy-300 hover:text-white transition-colors py-2"
+                className="text-navy-300 hover:text-white transition-colors py-2 flex items-center gap-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
+                <span>🏷️</span>
                 Categories
               </Link>
               <Link
-                href="/contact"
-                className="text-navy-300 hover:text-white transition-colors py-2"
+                href="/instructors"
+                className="text-navy-300 hover:text-white transition-colors py-2 flex items-center gap-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
+                <span>👨‍🏫</span>
+                Instructors
+              </Link>
+              <Link
+                href="/contact"
+                className="text-navy-300 hover:text-white transition-colors py-2 flex items-center gap-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <span>✉️</span>
                 Contact
               </Link>
               <Link
