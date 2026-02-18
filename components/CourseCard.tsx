@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
+import CourseProgressIndicator from './CourseProgressIndicator'
 
 interface CourseCardProps {
   course: Course
@@ -40,6 +41,14 @@ export default function CourseCard({ course }: CourseCardProps) {
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+        
+        {/* Progress Bar Overlay */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <CourseProgressIndicator 
+            courseSlug={course.slug} 
+            totalLessons={lessons.length}
+          />
         </div>
       </div>
 
