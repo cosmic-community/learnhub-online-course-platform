@@ -3,6 +3,11 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import WelcomeMessage from '@/components/WelcomeMessage'
+import QuickStats from '@/components/QuickStats'
+import LearningStreak from '@/components/LearningStreak'
+import SkillProgress from '@/components/SkillProgress'
+import AchievementBadges from '@/components/AchievementBadges'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +17,11 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total lessons
+  const totalLessons = courses.reduce((sum, course) => {
+    return sum + (course.metadata?.lessons?.length || 0)
+  }, 0)
 
   return (
     <div>
@@ -20,8 +30,35 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-3xl mx-auto">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          {/* Welcome Message - New! */}
+          <div className="mb-8">
+            <WelcomeMessage />
+          </div>
+
+          {/* Gamification Dashboard - New! */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            {/* Left: Learning Streak */}
+            <div className="lg:col-span-1">
+              <LearningStreak />
+            </div>
+            
+            {/* Right: Achievements + Stats */}
+            <div className="lg:col-span-2 space-y-6">
+              <AchievementBadges compact />
+              <SkillProgress categories={categories} />
+            </div>
+          </div>
+
+          {/* Quick Stats - New! */}
+          <QuickStats 
+            totalCourses={courses.length}
+            totalLessons={totalLessons}
+            totalInstructors={instructors.length}
+          />
+
+          {/* Original Hero Content */}
+          <div className="text-center max-w-3xl mx-auto mt-16">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -37,22 +74,6 @@ export default async function HomePage() {
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
               </Link>
-            </div>
-          </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
         </div>
