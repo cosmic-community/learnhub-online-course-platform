@@ -11,8 +11,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-2xl group-hover:animate-bounce">📚</span>
             <span className="text-xl font-bold text-white">LearnHub</span>
           </Link>
 
@@ -20,28 +20,32 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Courses
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300" />
             </Link>
             <Link
               href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Categories
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300" />
             </Link>
             <Link
               href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300" />
             </Link>
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/courses" className="btn-primary">
-              Start Learning
+            <Link href="/courses" className="btn-primary group overflow-hidden relative">
+              <span className="relative z-10">Start Learning</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
 
