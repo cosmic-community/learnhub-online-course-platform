@@ -14,7 +14,16 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block relative">
+      {/* Popular badge for courses with many lessons */}
+      {lessons.length >= 3 && (
+        <div className="absolute top-4 left-4 z-10">
+          <span className="badge bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs">
+            🔥 Popular
+          </span>
+        </div>
+      )}
+
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -31,15 +40,25 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free">✨ Free</span>
           ) : (
             <span className="badge bg-navy-900/90 text-white">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+
+        {/* Quick view hint */}
+        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+          <span className="text-white text-sm bg-primary-500 px-3 py-1 rounded-full">
+            View Course →
+          </span>
         </div>
       </div>
 
@@ -101,16 +120,23 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
                 👨‍🏫
               </div>
             )}
-            <span className="text-sm text-navy-300">
-              {instructors[0].metadata?.name || instructors[0].title}
-            </span>
+            <div className="flex-1 min-w-0">
+              <span className="text-sm text-navy-300 truncate block">
+                {instructors[0].metadata?.name || instructors[0].title}
+              </span>
+            </div>
+            {/* Star rating placeholder */}
+            <div className="flex items-center gap-1 text-yellow-400 text-sm">
+              <span>⭐</span>
+              <span className="text-navy-400">4.8</span>
+            </div>
           </div>
         )}
       </div>
