@@ -195,6 +195,22 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   }
 }
 
+// Get total lessons count (for stats)
+export async function getLessonsCount(): Promise<number> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'lessons' })
+      .props(['id'])
+    
+    return response.objects.length
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return 0
+    }
+    return 0
+  }
+}
+
 // Submit contact form
 export async function submitContactForm(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
   try {
