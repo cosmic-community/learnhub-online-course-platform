@@ -3,6 +3,11 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import AchievementBadge from '@/components/AchievementBadge'
+import QuickStats from '@/components/QuickStats'
+import WelcomeBanner from '@/components/WelcomeBanner'
+import RecommendedCourse from '@/components/RecommendedCourse'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -15,6 +20,35 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Welcome Banner - New! */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <WelcomeBanner />
+      </section>
+
+      {/* Learning Dashboard Section - New! */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Quick Stats */}
+          <div className="lg:col-span-2">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span>📊</span> Your Progress
+            </h2>
+            <QuickStats />
+          </div>
+          
+          {/* Learning Streak */}
+          <div>
+            <LearningStreak />
+          </div>
+        </div>
+
+        {/* Achievements & Recommendations Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <AchievementBadge />
+          <RecommendedCourse courses={courses} />
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
