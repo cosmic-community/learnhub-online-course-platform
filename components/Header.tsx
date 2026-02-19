@@ -1,45 +1,70 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  // Track scroll position for header effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 bg-navy-950/80 backdrop-blur-lg border-b border-navy-800">
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+      scrolled 
+        ? 'bg-navy-950/95 backdrop-blur-lg shadow-lg shadow-navy-950/50' 
+        : 'bg-navy-950/80 backdrop-blur-lg'
+    } border-b border-navy-800`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
-            <span className="text-xl font-bold text-white">LearnHub</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-2xl group-hover:animate-float">📚</span>
+            <span className="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">LearnHub</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Courses
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-400 transition-all group-hover:w-full" />
             </Link>
             <Link
               href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Categories
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-400 transition-all group-hover:w-full" />
             </Link>
             <Link
               href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-400 transition-all group-hover:w-full" />
             </Link>
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Keyboard shortcut hint */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-navy-800/50 rounded-lg border border-navy-700 text-navy-400 text-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span>Search</span>
+              <kbd className="px-1.5 py-0.5 bg-navy-700 rounded text-xs">⌘K</kbd>
+            </div>
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
@@ -65,7 +90,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-navy-800">
+          <div className="md:hidden py-4 border-t border-navy-800 animate-slide-up">
             <nav className="flex flex-col gap-4">
               <Link
                 href="/courses"

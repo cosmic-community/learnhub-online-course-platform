@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
@@ -7,6 +10,7 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
   const { metadata } = course
   const thumbnail = metadata?.thumbnail
   const instructors = metadata?.instructors || []
@@ -14,7 +18,12 @@ export default function CourseCard({ course }: CourseCardProps) {
   const lessons = metadata?.lessons || []
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link 
+      href={`/courses/${course.slug}`} 
+      className="card group block"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -23,23 +32,40 @@ export default function CourseCard({ course }: CourseCardProps) {
             alt={course.title}
             width={400}
             height={225}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-navy-700 to-navy-800 flex items-center justify-center">
-            <span className="text-5xl">📚</span>
+            <span className={`text-5xl transition-transform duration-300 ${isHovered ? 'scale-125 rotate-12' : ''}`}>📚</span>
           </div>
         )}
+        
+        {/* Overlay on hover */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-navy-950/90 via-transparent to-transparent transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="absolute bottom-4 left-4 right-4">
+            <span className="btn-primary text-sm py-2 px-4">
+              Start Learning →
+            </span>
+          </div>
+        </div>
         
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse-slow">Free</span>
           ) : (
-            <span className="badge bg-navy-900/90 text-white">
+            <span className="badge bg-navy-900/90 text-white backdrop-blur-sm">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+
+        {/* Progress indicator (visual only, for future use) */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-navy-800">
+          <div 
+            className="h-full bg-primary-400 transition-all duration-500"
+            style={{ width: isHovered ? '15%' : '0%' }}
+          />
         </div>
       </div>
 
@@ -51,9 +77,12 @@ export default function CourseCard({ course }: CourseCardProps) {
             {categories.slice(0, 2).map((category) => (
               <span
                 key={category.id}
-                className="text-xs text-navy-400"
+                className="text-xs text-navy-400 flex items-center gap-1"
               >
-                {category.metadata?.icon} {category.metadata?.name || category.title}
+                <span className={`transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}>
+                  {category.metadata?.icon}
+                </span>
+                {category.metadata?.name || category.title}
               </span>
             ))}
           </div>
@@ -101,7 +130,7 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className={`w-8 h-8 rounded-full object-cover ring-2 ring-transparent transition-all ${isHovered ? 'ring-primary-400' : ''}`}
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
