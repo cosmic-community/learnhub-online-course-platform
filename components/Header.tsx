@@ -2,8 +2,27 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import SearchModal from './SearchModal'
 
-export default function Header() {
+interface HeaderProps {
+  courses?: Array<{
+    slug: string
+    title: string
+    metadata?: {
+      tagline?: string
+    }
+  }>
+  categories?: Array<{
+    slug: string
+    title: string
+    metadata?: {
+      name?: string
+      icon?: string
+    }
+  }>
+}
+
+export default function Header({ courses = [], categories = [] }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
@@ -17,7 +36,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             <Link
               href="/courses"
               className="text-navy-300 hover:text-white transition-colors"
@@ -38,8 +57,9 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Desktop CTA & Search */}
+          <div className="hidden md:flex items-center gap-3">
+            <SearchModal courses={courses} categories={categories} />
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
