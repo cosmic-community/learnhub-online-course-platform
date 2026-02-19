@@ -36,6 +36,24 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
+      animation: {
+        'bounce-slow': 'bounce-slow 2s ease-in-out infinite',
+        'glow': 'glow 2s ease-in-out infinite',
+        'shimmer': 'shimmer 2s infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'count-up': 'count-up 0.5s ease-out forwards',
+        'unlock': 'unlock 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+      },
+      keyframes: {
+        'bounce-slow': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        'glow': {
+          '0%, 100%': { boxShadow: '0 0 5px currentColor, 0 0 10px currentColor' },
+          '50%': { boxShadow: '0 0 20px currentColor, 0 0 30px currentColor' },
+        },
+      },
     },
   },
   plugins: [],

@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,11 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
 
   return (
     <div>
@@ -55,6 +61,17 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Learning Progress Section - NEW */}
+      <section className="py-12 -mt-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LearningProgress 
+            totalCourses={courses.length} 
+            totalLessons={totalLessons}
+            totalInstructors={instructors.length}
+          />
         </div>
       </section>
 
