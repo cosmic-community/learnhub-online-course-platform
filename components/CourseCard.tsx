@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import type { Course } from '@/types'
 import DifficultyBadge from './DifficultyBadge'
@@ -31,6 +33,11 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Shimmer overlay on hover */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute inset-0 animate-shimmer" />
+        </div>
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
@@ -40,6 +47,15 @@ export default function CourseCard({ course }: CourseCardProps) {
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+
+        {/* Play icon overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <div className="w-16 h-16 rounded-full bg-primary-500/90 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300">
+            <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -101,7 +117,7 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500/50 transition-all"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">

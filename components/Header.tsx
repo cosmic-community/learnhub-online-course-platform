@@ -11,8 +11,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="text-2xl transition-transform group-hover:scale-110">📚</span>
             <span className="text-xl font-bold text-white">LearnHub</span>
           </Link>
 
@@ -20,26 +20,36 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Courses
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full" />
             </Link>
             <Link
               href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Categories
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full" />
             </Link>
             <Link
               href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
+              className="text-navy-300 hover:text-white transition-colors relative group"
             >
               Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full" />
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA and Search Hint */}
           <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-navy-800/50 border border-navy-700 rounded-lg text-navy-400 text-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="hidden lg:inline">Quick search</span>
+              <kbd className="px-1.5 py-0.5 bg-navy-700 rounded text-xs">⌘K</kbd>
+            </div>
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
@@ -65,7 +75,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-navy-800">
+          <div className="md:hidden py-4 border-t border-navy-800 animate-slide-up">
             <nav className="flex flex-col gap-4">
               <Link
                 href="/courses"
