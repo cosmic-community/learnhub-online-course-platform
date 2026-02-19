@@ -13,8 +13,22 @@ export default function CourseCard({ course }: CourseCardProps) {
   const categories = metadata?.categories || []
   const lessons = metadata?.lessons || []
 
+  // Calculate progress indicator (mock - in real app, this would come from user data)
+  const randomProgress = Math.floor(Math.random() * 100)
+  const hasStarted = randomProgress > 0 && randomProgress < 100
+
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block relative">
+      {/* Progress indicator for started courses */}
+      {hasStarted && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-navy-700 z-10 rounded-t-2xl overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all duration-500"
+            style={{ width: `${randomProgress}%` }}
+          />
+        </div>
+      )}
+      
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
         {thumbnail ? (
@@ -31,15 +45,27 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
+            <span className="badge badge-free animate-pulse-slow">Free</span>
           ) : (
             <span className="badge bg-navy-900/90 text-white">
               ${metadata?.price || 0}
             </span>
           )}
+        </div>
+        
+        {/* Play button on hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-16 h-16 rounded-full bg-primary-500/90 flex items-center justify-center shadow-lg shadow-primary-500/50 transform scale-75 group-hover:scale-100 transition-transform duration-300">
+            <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -101,7 +127,7 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500 transition-all"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
