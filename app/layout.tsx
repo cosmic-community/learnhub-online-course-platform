@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import { getCourses, getCategories } from '@/lib/cosmic'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -12,12 +13,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string
+  
+  // Fetch data for the search modal
+  const [courses, categories] = await Promise.all([
+    getCourses(),
+    getCategories(),
+  ])
   
   return (
     <html lang="en">
@@ -25,7 +32,7 @@ export default function RootLayout({
         <script src="/dashboard-console-capture.js" />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Header />
+        <Header courses={courses} categories={categories} />
         <main className="flex-1">
           {children}
         </main>

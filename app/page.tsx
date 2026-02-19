@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import CourseSpotlight from '@/components/CourseSpotlight'
+import QuickActions from '@/components/QuickActions'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -57,6 +60,23 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Streak & Quick Actions */}
+      <section className="py-12 bg-navy-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <LearningStreak />
+          <QuickActions />
+        </div>
+      </section>
+
+      {/* Course Spotlight */}
+      {courses.length > 0 && (
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <CourseSpotlight courses={courses} />
+          </div>
+        </section>
+      )}
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
@@ -127,9 +147,17 @@ export default async function HomePage() {
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+              <div className="flex items-center justify-center gap-2 text-navy-400">
+                <kbd className="px-2 py-1 bg-navy-800 rounded text-sm">⌘</kbd>
+                <span>+</span>
+                <kbd className="px-2 py-1 bg-navy-800 rounded text-sm">K</kbd>
+                <span className="text-sm ml-2">to quick search</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
