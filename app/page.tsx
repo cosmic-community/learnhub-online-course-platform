@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import AnimatedStats from '@/components/AnimatedStats'
+import LearningTip from '@/components/LearningTip'
+import QuickStartSection from '@/components/QuickStartSection'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +15,17 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Get one course from each difficulty level for quick start
+  const beginnerCourse = courses.find(c => c.metadata?.difficulty?.value === 'Beginner' || c.metadata?.difficulty?.value === 'beginner')
+  const intermediateCourse = courses.find(c => c.metadata?.difficulty?.value === 'Intermediate' || c.metadata?.difficulty?.value === 'intermediate')
+  const advancedCourse = courses.find(c => c.metadata?.difficulty?.value === 'Advanced' || c.metadata?.difficulty?.value === 'advanced')
+
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    const lessonCount = course.metadata?.lessons?.length || 0
+    return acc + lessonCount
+  }, 0)
 
   return (
     <div>
@@ -20,8 +34,15 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
+        {/* Floating elements for visual interest */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-primary-500/10 rounded-full blur-xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-primary-400/10 rounded-full blur-xl animate-float-delayed" />
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Learning Tip Banner */}
+            <LearningTip />
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,8 +52,11 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
+              <Link href="/courses" className="btn-primary text-lg group">
+                <span>Browse Courses</span>
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
@@ -40,29 +64,32 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
-          </div>
+          {/* Animated Stats */}
+          <AnimatedStats 
+            coursesCount={courses.length}
+            instructorsCount={instructors.length}
+            categoriesCount={categories.length}
+            lessonsCount={totalLessons}
+          />
         </div>
       </section>
+
+      {/* Quick Start Section - New! */}
+      <QuickStartSection 
+        beginnerCourse={beginnerCourse}
+        intermediateCourse={intermediateCourse}
+        advancedCourse={advancedCourse}
+      />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">🔥</span>
+                <span className="text-primary-400 text-sm font-semibold uppercase tracking-wider">Popular Now</span>
+              </div>
               <h2 className="text-3xl font-bold text-white mb-2">Featured Courses</h2>
               <p className="text-navy-400">Start learning with our most popular courses</p>
             </div>
@@ -117,19 +144,44 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section with sparkle effect */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden group">
+            {/* Animated gradient border effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 via-primary-400/20 to-primary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="relative">
+              <div className="text-5xl mb-4">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <Link href="/courses" className="btn-primary text-lg inline-flex items-center group/btn">
+                <span>Get Started Now</span>
+                <svg className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+              
+              {/* Trust indicators */}
+              <div className="mt-8 flex items-center justify-center gap-6 text-navy-400 text-sm">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Cancel anytime</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
