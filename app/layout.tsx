@@ -3,6 +3,8 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import SearchProvider from '@/components/SearchProvider'
+import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -12,12 +14,19 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string
+  
+  // Fetch data for search
+  const [courses, categories, instructors] = await Promise.all([
+    getCourses(),
+    getCategories(),
+    getInstructors(),
+  ])
   
   return (
     <html lang="en">
@@ -31,6 +40,11 @@ export default function RootLayout({
         </main>
         <Footer />
         <CosmicBadge bucketSlug={bucketSlug} />
+        <SearchProvider 
+          courses={courses}
+          categories={categories}
+          instructors={instructors}
+        />
       </body>
     </html>
   )
