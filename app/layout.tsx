@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
-import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import LearningStreak from '@/components/LearningStreak'
+import QuickTip from '@/components/QuickTip'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'LearnHub - Online Learning Platform',
-  description: 'Discover courses in web development, design, and more. Learn from industry experts and advance your career.',
-  icons: {
-    icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>',
-  },
+  title: 'LearnHub - Online Course Platform',
+  description: 'Master new skills with expert-led online courses. Learn web development, design, and more at your own pace.',
+  keywords: ['online courses', 'learning platform', 'web development', 'programming', 'education'],
 }
 
 export default function RootLayout({
@@ -17,20 +17,21 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string
+  const bucketSlug = process.env.COSMIC_BUCKET_SLUG || ''
   
   return (
     <html lang="en">
       <head>
+        {/* Console capture script for dashboard debugging */}
         <script src="/dashboard-console-capture.js" />
       </head>
       <body className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1">
-          {children}
-        </main>
+        <main className="flex-1">{children}</main>
         <Footer />
         <CosmicBadge bucketSlug={bucketSlug} />
+        <LearningStreak />
+        <QuickTip />
       </body>
     </html>
   )
