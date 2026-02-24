@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickActions from '@/components/QuickActions'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -21,45 +23,64 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Learn skills that
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
-            </h1>
-            <p className="text-xl text-navy-300 mb-8">
-              Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
-              </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
+          <div className="grid lg:grid-cols-3 gap-12 items-start">
+            {/* Main Hero Content */}
+            <div className="lg:col-span-2">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                  </span>
+                  New courses added weekly
+                </div>
+                
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                  Learn skills that
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
+                </h1>
+                <p className="text-xl text-navy-300 mb-8">
+                  Master web development, design, and more with expert-led courses. 
+                  Start your learning journey today.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/courses" className="btn-primary text-lg">
+                    Browse Courses
+                  </Link>
+                  <Link href="/categories" className="btn-secondary text-lg">
+                    Explore Categories
+                  </Link>
+                </div>
+              </div>
+              
+              {/* Stats */}
+              <div className="mt-16 grid grid-cols-3 gap-8 max-w-xl">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">{courses.length}+</div>
+                  <div className="text-navy-400 text-sm">Courses</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+                  <div className="text-navy-400 text-sm">Instructors</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">{categories.length}</div>
+                  <div className="text-navy-400 text-sm">Categories</div>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+
+            {/* Right Sidebar - Learning Streak & Quick Actions */}
+            <div className="space-y-6">
+              <LearningStreak />
+              <QuickActions />
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Courses */}
-      <section className="py-20 bg-navy-900/30">
+      <section id="featured-courses" className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -121,6 +142,7 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-6xl mb-6 animate-float">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
