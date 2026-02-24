@@ -1,17 +1,26 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import DailyTip from '@/components/DailyTip'
+import LearningStreak from '@/components/LearningStreak'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Get a random tip from lessons that have code examples
+  const lessonsWithCode = lessons.filter(l => l.metadata?.code_example)
+  const randomLesson = lessonsWithCode.length > 0 
+    ? lessonsWithCode[Math.floor(Math.random() * lessonsWithCode.length)]
+    : null
 
   return (
     <div>
@@ -54,6 +63,16 @@ export default async function HomePage() {
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Streak & Daily Tip Section */}
+      <section className="py-12 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <LearningStreak totalLessons={lessons.length} totalCourses={courses.length} />
+            {randomLesson && <DailyTip lesson={randomLesson} />}
           </div>
         </div>
       </section>
