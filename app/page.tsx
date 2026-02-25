@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import WelcomeBanner from '@/components/WelcomeBanner'
+import LearningStreak from '@/components/LearningStreak'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -13,8 +15,21 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning hours from all courses
+  const totalLearningHours = courses.reduce((sum, course) => {
+    return sum + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
+  // Calculate total lessons
+  const totalLessons = courses.reduce((sum, course) => {
+    return sum + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
+      {/* Welcome Banner with Daily Quote */}
+      <WelcomeBanner />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -40,19 +55,23 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          {/* Enhanced Stats with Animation */}
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{totalLearningHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
             </div>
           </div>
         </div>
@@ -133,6 +152,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Streak Widget */}
+      <LearningStreak />
     </div>
   )
 }
