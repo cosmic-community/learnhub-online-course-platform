@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import PersonalizedGreeting from '@/components/PersonalizedGreeting'
+import StreakCounter from '@/components/StreakCounter'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -13,6 +15,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -21,6 +28,16 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          {/* Personalized Greeting for returning visitors */}
+          <div className="mb-8">
+            <PersonalizedGreeting />
+          </div>
+          
+          {/* Streak Counter */}
+          <div className="flex justify-center mb-8">
+            <StreakCounter />
+          </div>
+          
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
@@ -40,18 +57,22 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          {/* Stats - Enhanced with total lessons */}
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto">
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
@@ -121,6 +142,7 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-4">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
