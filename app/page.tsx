@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -41,10 +46,14 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
@@ -85,8 +94,52 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Why Learn With Us */}
       <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-2">Why Learn With Us?</h2>
+            <p className="text-navy-400">Everything you need to succeed in your learning journey</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="card p-6 text-center group hover:border-primary-500/50">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <span className="text-3xl">🎯</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Track Progress</h3>
+              <p className="text-navy-400 text-sm">Monitor your learning journey with our built-in progress tracker and achievements</p>
+            </div>
+            
+            <div className="card p-6 text-center group hover:border-primary-500/50">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <span className="text-3xl">🔥</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Daily Streaks</h3>
+              <p className="text-navy-400 text-sm">Build consistent learning habits with our streak system and stay motivated</p>
+            </div>
+            
+            <div className="card p-6 text-center group hover:border-primary-500/50">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <span className="text-3xl">🏆</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Earn Achievements</h3>
+              <p className="text-navy-400 text-sm">Unlock badges and achievements as you complete lessons and courses</p>
+            </div>
+            
+            <div className="card p-6 text-center group hover:border-primary-500/50">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <span className="text-3xl">👨‍🏫</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Expert Instructors</h3>
+              <p className="text-navy-400 text-sm">Learn from industry professionals with real-world experience</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +155,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,18 +171,29 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
+            <div className="relative">
+              <div className="text-5xl mb-4">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+                Track your progress, earn achievements, and build a daily learning habit.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Get Started Now
+                </Link>
+                <Link href="/contact" className="btn-secondary text-lg">
+                  Have Questions?
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
