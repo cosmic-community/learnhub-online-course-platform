@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningDashboard from '@/components/LearningDashboard'
+import QuickStartSection from '@/components/QuickStartSection'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,16 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours
+  const totalLearningHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours ?? 0)
+  }, 0)
+
+  // Calculate total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length ?? 0)
+  }, 0)
 
   return (
     <div>
@@ -41,7 +53,7 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
@@ -51,12 +63,26 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalLearningHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Learning Dashboard - New Interactive Section */}
+      <LearningDashboard 
+        totalCourses={courses.length}
+        totalLessons={totalLessons}
+        totalHours={totalLearningHours}
+      />
+
+      {/* Quick Start Recommendations */}
+      <QuickStartSection courses={courses} />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
