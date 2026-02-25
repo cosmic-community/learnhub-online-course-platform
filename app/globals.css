@@ -105,3 +105,42 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Command Palette Animation */
+@keyframes commandPaletteIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Smooth focus transitions */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-navy-950;
+}
+
+/* Custom scrollbar for the command palette */
+.command-palette-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.command-palette-scroll::-webkit-scrollbar-track {
+  @apply bg-navy-900;
+}
+
+.command-palette-scroll::-webkit-scrollbar-thumb {
+  @apply bg-navy-700 rounded-full;
+}
+
+.command-palette-scroll::-webkit-scrollbar-thumb:hover {
+  @apply bg-navy-600;
+}
+
+/* Keyboard shortcut styling */
+kbd {
+  @apply font-mono;
+}

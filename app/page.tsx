@@ -38,6 +38,15 @@ export default async function HomePage() {
                 Explore Categories
               </Link>
             </div>
+            
+            {/* Keyboard shortcut hint */}
+            <div className="mt-8 flex items-center justify-center gap-2 text-navy-400 text-sm">
+              <span>Pro tip: Press</span>
+              <kbd className="px-2 py-1 bg-navy-800 border border-navy-700 rounded text-navy-300 font-mono text-xs">
+                ⌘K
+              </kbd>
+              <span>to quickly search</span>
+            </div>
           </div>
           
           {/* Stats */}
