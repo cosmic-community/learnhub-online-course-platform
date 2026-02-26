@@ -31,11 +31,12 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
+              <Link href="/quiz" className="btn-primary text-lg group">
+                <span className="mr-2">✨</span>
+                Find Your Perfect Course
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
+              <Link href="/courses" className="btn-secondary text-lg">
+                Browse All Courses
               </Link>
             </div>
           </div>
@@ -54,6 +55,24 @@ export default async function HomePage() {
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quiz Banner - New exciting feature callout */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/20 via-primary-600/10 to-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <span className="text-4xl">🎯</span>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Not sure where to start?</h3>
+                <p className="text-navy-300 text-sm">Take our 30-second quiz for personalized recommendations!</p>
+              </div>
+            </div>
+            <Link href="/quiz" className="btn-primary whitespace-nowrap">
+              Take the Quiz
+            </Link>
           </div>
         </div>
       </section>
@@ -127,9 +146,15 @@ export default async function HomePage() {
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/quiz" className="btn-primary text-lg">
+                <span className="mr-2">✨</span>
+                Find Your Path
+              </Link>
+              <Link href="/courses" className="btn-secondary text-lg">
+                Browse Courses
+              </Link>
+            </div>
           </div>
         </div>
       </section>
