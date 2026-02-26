@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -57,6 +58,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Progress Section - New! */}
+      <LearningProgress totalCourses={courses.length} />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
