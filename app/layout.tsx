@@ -3,6 +3,9 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import LearningStreak from '@/components/LearningStreak'
+import KeyboardShortcuts from '@/components/KeyboardShortcuts'
+import ScrollProgress from '@/components/ScrollProgress'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -25,12 +28,15 @@ export default function RootLayout({
         <script src="/dashboard-console-capture.js" />
       </head>
       <body className="min-h-screen flex flex-col">
+        <ScrollProgress />
         <Header />
         <main className="flex-1">
           {children}
         </main>
         <Footer />
+        <LearningStreak />
         <CosmicBadge bucketSlug={bucketSlug} />
+        <KeyboardShortcuts />
       </body>
     </html>
   )
