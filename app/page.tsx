@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickResume from '@/components/QuickResume'
+import MotivationalQuote from '@/components/MotivationalQuote'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -58,6 +61,26 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Learning Progress Section - NEW! */}
+      <section className="py-12 -mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Learning Streak */}
+            <LearningStreak />
+            
+            {/* Quick Resume */}
+            <div className="lg:col-span-2">
+              <QuickResume />
+              
+              {/* Motivational Quote - shows when no recent lesson */}
+              <div className="mt-6">
+                <MotivationalQuote />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,7 +94,7 @@ export default async function HomePage() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
             {featuredCourses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
@@ -93,7 +116,7 @@ export default async function HomePage() {
             <p className="text-navy-400">Find the perfect course for your learning goals</p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {categories.map((category) => (
               <CategoryCard key={category.id} category={category} />
             ))}
@@ -109,7 +132,7 @@ export default async function HomePage() {
             <p className="text-navy-400">Learn from industry experts with real-world experience</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
             {instructors.map((instructor) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
             ))}
