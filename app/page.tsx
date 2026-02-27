@@ -13,6 +13,16 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
+  // Count total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +32,11 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span>New: Track your learning streak!</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -40,19 +55,57 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          {/* Enhanced Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                {courses.length}+
+              </div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                {totalLessons}+
+              </div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                {totalHours}+
+              </div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                {instructors.length}+
+              </div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Streak Promo Banner */}
+      <section className="py-8 bg-gradient-to-r from-primary-600/20 via-primary-500/10 to-primary-600/20 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
+            <div className="flex items-center gap-3">
+              <span className="text-4xl">🔥</span>
+              <div>
+                <h3 className="text-white font-semibold">Build Your Learning Streak!</h3>
+                <p className="text-navy-300 text-sm">Visit daily to maintain your streak and unlock achievements</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {['🌱', '💪', '🔥', '⚡', '⭐', '🏆', '👑'].map((emoji, i) => (
+                <span 
+                  key={i} 
+                  className="text-2xl opacity-50 hover:opacity-100 hover:scale-125 transition-all cursor-default"
+                  title={`${[1, 3, 7, 14, 30, 60, 100][i]} day streak`}
+                >
+                  {emoji}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -121,11 +174,13 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-4">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
+              Build your streak and track your progress!
             </p>
             <Link href="/courses" className="btn-primary text-lg">
               Get Started Now
