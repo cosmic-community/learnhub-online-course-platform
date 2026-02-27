@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import DailyTip from '@/components/DailyTip'
+import WelcomeConfetti from '@/components/WelcomeConfetti'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -13,8 +16,16 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Get a random instructor for the daily tip
+  const tipInstructor = instructors.length > 0 
+    ? instructors[Math.floor(Math.random() * instructors.length)] 
+    : null
+
   return (
     <div>
+      {/* Welcome Confetti Effect */}
+      <WelcomeConfetti />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -54,6 +65,16 @@ export default async function HomePage() {
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Streak & Daily Tip Section */}
+      <section className="py-12 bg-gradient-to-r from-primary-500/5 via-navy-900/50 to-primary-500/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <LearningStreak />
+            <DailyTip instructor={tipInstructor} />
           </div>
         </div>
       </section>
