@@ -1,14 +1,18 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickStats from '@/components/QuickStats'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
@@ -21,38 +25,43 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Learn skills that
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
-            </h1>
-            <p className="text-xl text-navy-300 mb-8">
-              Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
-              </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Left side - Main content */}
+            <div className="text-center lg:text-left">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                Learn skills that
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
+              </h1>
+              <p className="text-xl text-navy-300 mb-8">
+                Master web development, design, and more with expert-led courses. 
+                Start your learning journey today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Browse Courses
+                </Link>
+                <Link href="/categories" className="btn-secondary text-lg">
+                  Explore Categories
+                </Link>
+              </div>
+
+              {/* Daily Tip - Shows below buttons on mobile/desktop */}
+              <div className="mt-8">
+                <DailyTip />
+              </div>
             </div>
-          </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+
+            {/* Right side - Streak & Stats */}
+            <div className="space-y-6">
+              {/* Learning Streak */}
+              <LearningStreak />
+
+              {/* Quick Stats */}
+              <QuickStats 
+                totalCourses={courses.length}
+                totalLessons={lessons.length}
+                totalInstructors={instructors.length}
+              />
             </div>
           </div>
         </div>
@@ -120,16 +129,24 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Animated background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-transparent to-primary-500/10 animate-gradient" />
+            
+            <div className="relative">
+              <div className="text-5xl mb-4">🎯</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+                <br />
+                <span className="text-primary-400">Build your streak. Build your future.</span>
+              </p>
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
