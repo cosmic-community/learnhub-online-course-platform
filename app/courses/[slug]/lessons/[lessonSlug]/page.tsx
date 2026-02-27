@@ -1,56 +1,22 @@
 // app/courses/[slug]/lessons/[lessonSlug]/page.tsx
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getCourseBySlug, getCourses } from '@/lib/cosmic'
+import { getCourseBySlug } from '@/lib/cosmic'
 import MarkdownContent from '@/components/MarkdownContent'
 import CodeBlock from '@/components/CodeBlock'
 import VideoEmbed from '@/components/VideoEmbed'
-import type { Metadata } from 'next'
+import LessonList from '@/components/LessonList'
+import LessonCompleteButton from '@/components/LessonCompleteButton'
 import type { Lesson } from '@/types'
 
-interface PageProps {
-  params: Promise<{ slug: string; lessonSlug: string }>
+interface LessonPageProps {
+  params: Promise<{
+    slug: string
+    lessonSlug: string
+  }>
 }
 
-export async function generateStaticParams() {
-  const courses = await getCourses()
-  const params: { slug: string; lessonSlug: string }[] = []
-  
-  for (const course of courses) {
-    const lessons = course.metadata?.lessons || []
-    for (const lesson of lessons) {
-      params.push({
-        slug: course.slug,
-        lessonSlug: lesson.slug,
-      })
-    }
-  }
-  
-  return params
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug, lessonSlug } = await params
-  const course = await getCourseBySlug(slug)
-  
-  if (!course) {
-    return { title: 'Lesson Not Found - LearnHub' }
-  }
-  
-  const lessons = course.metadata?.lessons || []
-  const lesson = lessons.find((l: Lesson) => l.slug === lessonSlug)
-  
-  if (!lesson) {
-    return { title: 'Lesson Not Found - LearnHub' }
-  }
-  
-  return {
-    title: `${lesson.metadata?.title || lesson.title} - ${course.title} - LearnHub`,
-    description: lesson.metadata?.description || '',
-  }
-}
-
-export default async function LessonPage({ params }: PageProps) {
+export default async function LessonPage({ params }: LessonPageProps) {
   const { slug, lessonSlug } = await params
   const course = await getCourseBySlug(slug)
   
@@ -59,135 +25,116 @@ export default async function LessonPage({ params }: PageProps) {
   }
 
   const lessons = course.metadata?.lessons || []
-  const sortedLessons = [...lessons].sort((a, b) => {
-    const orderA = a.metadata?.order ?? 999
-    const orderB = b.metadata?.order ?? 999
-    return orderA - orderB
-  })
+  const currentLesson = lessons.find((l: Lesson) => l.slug === lessonSlug)
   
-  const lessonIndex = sortedLessons.findIndex((l) => l.slug === lessonSlug)
-  const lesson = sortedLessons[lessonIndex]
-  
-  if (!lesson) {
+  if (!currentLesson) {
     notFound()
   }
 
-  const prevLesson = lessonIndex > 0 ? sortedLessons[lessonIndex - 1] : null
-  const nextLesson = lessonIndex < sortedLessons.length - 1 ? sortedLessons[lessonIndex + 1] : null
+  const currentIndex = lessons.findIndex((l: Lesson) => l.slug === lessonSlug)
+  const prevLesson = currentIndex > 0 ? lessons[currentIndex - 1] : null
+  const nextLesson = currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null
+
+  const { metadata } = currentLesson
 
   return (
-    <div className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center gap-2 text-sm flex-wrap">
-            <li>
-              <Link href="/" className="text-navy-400 hover:text-primary-400">
-                Home
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li>
-              <Link href="/courses" className="text-navy-400 hover:text-primary-400">
-                Courses
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li>
-              <Link href={`/courses/${course.slug}`} className="text-navy-400 hover:text-primary-400">
-                {course.title}
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li className="text-navy-200">{lesson.metadata?.title || lesson.title}</li>
-          </ol>
-        </nav>
+    <div className="min-h-screen">
+      {/* Breadcrumb */}
+      <div className="bg-navy-900/50 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link href="/courses" className="text-navy-400 hover:text-white transition-colors">
+              Courses
+            </Link>
+            <span className="text-navy-600">/</span>
+            <Link href={`/courses/${slug}`} className="text-navy-400 hover:text-white transition-colors">
+              {course.title}
+            </Link>
+            <span className="text-navy-600">/</span>
+            <span className="text-navy-300">{currentLesson.title}</span>
+          </nav>
+        </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar - Lesson List */}
-          <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="card p-4 sticky top-24">
-              <h3 className="font-semibold text-white mb-4 px-2">Course Lessons</h3>
-              <nav className="space-y-1">
-                {sortedLessons.map((l, index) => (
-                  <Link
-                    key={l.id}
-                    href={`/courses/${course.slug}/lessons/${l.slug}`}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                      l.slug === lessonSlug
-                        ? 'bg-primary-500/20 text-primary-400'
-                        : 'text-navy-300 hover:bg-navy-800 hover:text-white'
-                    }`}
-                  >
-                    <span className="w-6 h-6 rounded-full bg-navy-700 flex items-center justify-center text-xs flex-shrink-0">
-                      {index + 1}
-                    </span>
-                    <span className="line-clamp-2">{l.metadata?.title || l.title}</span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </div>
-
           {/* Main Content */}
-          <div className="lg:col-span-3 order-1 lg:order-2">
-            {/* Lesson Header */}
-            <div className="mb-8">
-              <div className="text-sm text-navy-400 mb-2">
-                Lesson {lessonIndex + 1} of {sortedLessons.length}
-              </div>
-              <h1 className="text-3xl font-bold text-white mb-4">
-                {lesson.metadata?.title || lesson.title}
-              </h1>
-              {lesson.metadata?.description && (
-                <p className="text-lg text-navy-300">{lesson.metadata.description}</p>
-              )}
-              
-              {lesson.metadata?.duration_minutes && (
-                <div className="mt-4 flex items-center gap-2 text-navy-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {lesson.metadata.duration_minutes} minutes
-                </div>
-              )}
-            </div>
-
-            {/* Video */}
-            {lesson.metadata?.video_url && (
+          <div className="lg:col-span-3">
+            {/* Video Player */}
+            {metadata?.video_url && (
               <div className="mb-8">
-                <VideoEmbed url={lesson.metadata.video_url} title={lesson.metadata?.title || lesson.title} />
+                <VideoEmbed url={metadata.video_url} title={metadata?.title || currentLesson.title} />
               </div>
             )}
 
+            {/* Lesson Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-4">
+                <span className="px-3 py-1 bg-navy-800 text-navy-300 rounded-full text-sm">
+                  Lesson {currentIndex + 1} of {lessons.length}
+                </span>
+                {metadata?.duration_minutes && (
+                  <span className="flex items-center gap-1 text-navy-400 text-sm">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {metadata.duration_minutes} min
+                  </span>
+                )}
+              </div>
+              
+              <h1 className="text-3xl font-bold text-white mb-4">
+                {metadata?.title || currentLesson.title}
+              </h1>
+              
+              {metadata?.description && (
+                <p className="text-navy-300 text-lg">{metadata.description}</p>
+              )}
+            </div>
+
             {/* Lesson Content */}
-            {lesson.metadata?.content && (
+            {metadata?.content && (
               <div className="card p-8 mb-8">
-                <div className="prose max-w-none">
-                  <MarkdownContent content={lesson.metadata.content} />
-                </div>
+                <MarkdownContent content={metadata.content} />
               </div>
             )}
 
             {/* Code Example */}
-            {lesson.metadata?.code_example && (
-              <div className="card p-8 mb-8">
+            {metadata?.code_example && (
+              <div className="mb-8">
                 <h2 className="text-xl font-semibold text-white mb-4">Code Example</h2>
-                <CodeBlock code={lesson.metadata.code_example} />
+                <CodeBlock code={metadata.code_example} />
               </div>
             )}
 
+            {/* Mark Complete Button */}
+            <div className="mb-8 p-6 bg-navy-900/50 rounded-2xl border border-navy-800">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-1">Ready to move on?</h3>
+                  <p className="text-navy-400 text-sm">Mark this lesson as complete to track your progress</p>
+                </div>
+                <LessonCompleteButton 
+                  lessonSlug={lessonSlug} 
+                  durationMinutes={metadata?.duration_minutes || 0} 
+                />
+              </div>
+            </div>
+
             {/* Navigation */}
-            <div className="flex items-center justify-between pt-8 border-t border-navy-800">
+            <div className="flex items-center justify-between gap-4 pt-8 border-t border-navy-800">
               {prevLesson ? (
                 <Link
-                  href={`/courses/${course.slug}/lessons/${prevLesson.slug}`}
-                  className="btn-secondary"
+                  href={`/courses/${slug}/lessons/${prevLesson.slug}`}
+                  className="flex items-center gap-2 text-navy-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  Previous Lesson
+                  <div className="text-left">
+                    <div className="text-xs text-navy-500">Previous</div>
+                    <div className="text-sm">{prevLesson.title}</div>
+                  </div>
                 </Link>
               ) : (
                 <div />
@@ -195,19 +142,60 @@ export default async function LessonPage({ params }: PageProps) {
               
               {nextLesson ? (
                 <Link
-                  href={`/courses/${course.slug}/lessons/${nextLesson.slug}`}
-                  className="btn-primary"
+                  href={`/courses/${slug}/lessons/${nextLesson.slug}`}
+                  className="flex items-center gap-2 text-navy-400 hover:text-white transition-colors"
                 >
-                  Next Lesson
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="text-right">
+                    <div className="text-xs text-navy-500">Next</div>
+                    <div className="text-sm">{nextLesson.title}</div>
+                  </div>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>
               ) : (
-                <Link href={`/courses/${course.slug}`} className="btn-primary">
-                  Back to Course
+                <Link
+                  href={`/courses/${slug}`}
+                  className="btn-primary"
+                >
+                  Complete Course 🎉
                 </Link>
               )}
+            </div>
+          </div>
+
+          {/* Sidebar - Lesson List */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <h3 className="text-lg font-semibold text-white mb-4">Course Content</h3>
+              <LessonList 
+                lessons={lessons} 
+                courseSlug={slug} 
+                currentLessonSlug={lessonSlug}
+              />
+              
+              {/* Quick Course Info */}
+              <div className="mt-6 p-4 bg-navy-900/50 rounded-xl border border-navy-800">
+                <h4 className="text-sm font-semibold text-white mb-3">About this course</h4>
+                <div className="space-y-2 text-sm text-navy-400">
+                  <div className="flex items-center justify-between">
+                    <span>Total Lessons</span>
+                    <span className="text-white">{lessons.length}</span>
+                  </div>
+                  {course.metadata?.estimated_hours && (
+                    <div className="flex items-center justify-between">
+                      <span>Duration</span>
+                      <span className="text-white">{course.metadata.estimated_hours}h</span>
+                    </div>
+                  )}
+                  {course.metadata?.difficulty && (
+                    <div className="flex items-center justify-between">
+                      <span>Difficulty</span>
+                      <span className="text-white">{course.metadata.difficulty.value}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
