@@ -16,11 +16,11 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98];
   }
   
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-navy-800 hover:bg-navy-700 text-white font-semibold rounded-lg transition-all duration-200 border border-navy-700;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-navy-800 hover:bg-navy-700 text-white font-semibold rounded-lg transition-all duration-200 border border-navy-700 hover:scale-[1.02] active:scale-[0.98];
   }
   
   .card {
@@ -45,6 +45,156 @@
   
   .badge-free {
     @apply bg-primary-500/20 text-primary-400;
+  }
+  
+  /* Streak fire animation */
+  .streak-fire {
+    animation: fireGlow 1.5s ease-in-out infinite alternate;
+  }
+  
+  @keyframes fireGlow {
+    0% {
+      filter: drop-shadow(0 0 2px #f97316) drop-shadow(0 0 4px #f97316);
+      transform: scale(1);
+    }
+    100% {
+      filter: drop-shadow(0 0 8px #f97316) drop-shadow(0 0 16px #ef4444);
+      transform: scale(1.1);
+    }
+  }
+  
+  /* Floating animation for decorative elements */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  /* Pulse glow for active elements */
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.5), 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.4);
+    }
+  }
+  
+  /* Shimmer effect for loading states */
+  .shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* Confetti animation */
+  .confetti {
+    animation: confettiFall 3s ease-out forwards;
+  }
+  
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(-100%) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+  /* Counter animation */
+  .counter-animate {
+    animation: counterPop 0.3s ease-out;
+  }
+  
+  @keyframes counterPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Progress bar fill animation */
+  .progress-fill {
+    animation: progressFill 1s ease-out forwards;
+  }
+  
+  @keyframes progressFill {
+    from {
+      width: 0%;
+    }
+  }
+  
+  /* Modal backdrop */
+  .modal-backdrop {
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Modal content */
+  .modal-content {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Sparkle animation for achievements */
+  .sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
   }
 }
 

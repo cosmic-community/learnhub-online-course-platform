@@ -61,6 +61,7 @@ export interface Lesson extends CosmicObject {
 // Course type
 export interface Course extends CosmicObject {
   type: 'courses';
+  created_at?: string;
   metadata: {
     title: string;
     tagline?: string;
@@ -109,4 +110,13 @@ export interface CosmicResponse<T> {
 
 export interface CosmicSingleResponse<T> {
   object: T;
+}
+
+// Learning Streak type for client-side storage
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastVisit: string;
+  totalDays: number;
+  weeklyProgress: boolean[];
 }

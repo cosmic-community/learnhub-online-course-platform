@@ -31,6 +31,15 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
         
+        {/* Hover overlay with quick view hint */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-center">
+            <span className="px-4 py-2 bg-primary-500/90 backdrop-blur-sm text-white text-sm font-medium rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              View Course →
+            </span>
+          </div>
+        </div>
+        
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
           {metadata?.is_free ? (
@@ -41,6 +50,15 @@ export default function CourseCard({ course }: CourseCardProps) {
             </span>
           )}
         </div>
+        
+        {/* New indicator for recent courses */}
+        {course.created_at && isRecentCourse(course.created_at) && (
+          <div className="absolute top-4 left-4">
+            <span className="badge bg-green-500/90 text-white text-xs font-semibold">
+              ✨ New
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -101,10 +119,10 @@ export default function CourseCard({ course }: CourseCardProps) {
                 alt={instructors[0].metadata?.name || instructors[0].title}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-navy-700 group-hover:ring-primary-500 transition-all"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm ring-2 ring-navy-700 group-hover:ring-primary-500 transition-all">
                 👨‍🏫
               </div>
             )}
@@ -116,4 +134,11 @@ export default function CourseCard({ course }: CourseCardProps) {
       </div>
     </Link>
   )
+}
+
+// Helper function to check if a course is recent (within last 7 days)
+function isRecentCourse(createdAt: string): boolean {
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  return new Date(createdAt) > sevenDaysAgo
 }
