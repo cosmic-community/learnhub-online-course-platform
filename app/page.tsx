@@ -1,17 +1,26 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
+import CourseDiscovery from '@/components/CourseDiscovery'
+import MotivationalQuote from '@/components/MotivationalQuote'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total hours from courses
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
 
   return (
     <div>
@@ -53,6 +62,41 @@ export default async function HomePage() {
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ✨ NEW: Learning Journey Section */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950 via-navy-900/50 to-navy-950" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="inline-block px-4 py-1.5 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-4">
+              ✨ New Feature
+            </span>
+            <h2 className="text-3xl font-bold text-white mb-2">Your Learning Journey</h2>
+            <p className="text-navy-400">Track your progress and discover new courses</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Progress Ring Card */}
+            <div className="card-glass p-8 hover-lift">
+              <LearningProgress 
+                totalCourses={courses.length}
+                totalLessons={lessons.length}
+                totalHours={totalHours}
+              />
+            </div>
+            
+            {/* Course Discovery Card */}
+            <div className="card-glass p-8 hover-lift">
+              <CourseDiscovery courses={courses} />
+            </div>
+            
+            {/* Motivational Quote Card */}
+            <div className="card-glass hover-lift flex flex-col">
+              <MotivationalQuote />
             </div>
           </div>
         </div>
