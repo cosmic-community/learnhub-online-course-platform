@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning hours
+  const totalLearningHours = courses.reduce((total, course) => {
+    return total + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +27,10 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span>Start your streak today - build learning habits that last!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,18 +50,22 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 max-w-3xl mx-auto">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLearningHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
             </div>
           </div>
         </div>
@@ -85,8 +98,38 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Learning Streak Promo */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden bg-gradient-to-r from-primary-500/20 via-navy-900/50 to-navy-900/50 rounded-2xl border border-primary-500/30 p-8 sm:p-12">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="relative flex flex-col sm:flex-row items-center gap-8">
+              <div className="text-6xl animate-pulse">🔥</div>
+              <div className="text-center sm:text-left flex-1">
+                <h3 className="text-2xl font-bold text-white mb-2">Build Your Learning Streak</h3>
+                <p className="text-navy-300 mb-4">
+                  Visit daily to maintain your streak and unlock special achievements. 
+                  The more consistent you are, the more you learn!
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-navy-800 rounded-full text-sm">
+                    <span>🌱</span> First Steps
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-navy-800 rounded-full text-sm">
+                    <span>⚔️</span> Week Warrior
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-navy-800 rounded-full text-sm">
+                    <span>👑</span> Month Master
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Categories */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +145,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
