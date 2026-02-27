@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import AnimatedCounter from '@/components/AnimatedCounter'
+import DailyTip from '@/components/DailyTip'
+import GlobalSearch from '@/components/GlobalSearch'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,9 +15,49 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
+  // Prepare search data
+  const searchCourses = courses.map(course => ({
+    id: course.id,
+    title: course.title,
+    type: 'course' as const,
+    slug: course.slug,
+    description: course.metadata?.tagline,
+    icon: '📚'
+  }))
+
+  const searchCategories = categories.map(category => ({
+    id: category.id,
+    title: category.metadata?.name || category.title,
+    type: 'category' as const,
+    slug: category.slug,
+    description: category.metadata?.description,
+    icon: category.metadata?.icon || '🏷️'
+  }))
+
+  const searchInstructors = instructors.map(instructor => ({
+    id: instructor.id,
+    title: instructor.metadata?.name || instructor.title,
+    type: 'instructor' as const,
+    slug: instructor.slug,
+    description: instructor.metadata?.credentials,
+    icon: '👨‍🏫'
+  }))
 
   return (
     <div>
+      {/* Global Search Modal */}
+      <GlobalSearch 
+        courses={searchCourses}
+        categories={searchCategories}
+        instructors={searchInstructors}
+      />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -22,6 +65,13 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Keyboard Shortcut Hint */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-navy-800/50 border border-navy-700 rounded-full text-sm text-navy-400 mb-6 animate-pulse">
+              <span>Press</span>
+              <kbd className="px-1.5 py-0.5 bg-navy-700 rounded text-xs text-navy-300">⌘K</kbd>
+              <span>to search anywhere</span>
+            </div>
+
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -40,21 +90,52 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          {/* Animated Stats */}
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center group">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span className="text-2xl">📚</span>
+              </div>
+              <div className="text-3xl font-bold text-white">
+                <AnimatedCounter end={courses.length} suffix="+" />
+              </div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center group">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-yellow-500/20 to-yellow-500/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span className="text-2xl">📖</span>
+              </div>
+              <div className="text-3xl font-bold text-white">
+                <AnimatedCounter end={totalLessons} suffix="+" />
+              </div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span className="text-2xl">👨‍🏫</span>
+              </div>
+              <div className="text-3xl font-bold text-white">
+                <AnimatedCounter end={instructors.length} suffix="+" />
+              </div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+            <div className="text-center group">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span className="text-2xl">🏷️</span>
+              </div>
+              <div className="text-3xl font-bold text-white">
+                <AnimatedCounter end={categories.length} />
+              </div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Daily Tip Section */}
+      <section className="py-12 bg-navy-900/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <DailyTip />
         </div>
       </section>
 
@@ -120,16 +201,28 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Decorative background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl" />
+            
+            <div className="relative">
+              <div className="text-5xl mb-4">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Get Started Now
+                </Link>
+                <Link href="/contact" className="btn-secondary text-lg">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
