@@ -13,6 +13,16 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
+  // Calculate total learning hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -20,8 +30,22 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-primary-400/30 rounded-full animate-float" />
+          <div className="absolute top-40 right-20 w-3 h-3 bg-primary-500/20 rounded-full animate-float-delayed" />
+          <div className="absolute bottom-40 left-1/4 w-2 h-2 bg-orange-400/30 rounded-full animate-float" />
+          <div className="absolute top-1/3 right-1/3 w-4 h-4 bg-primary-400/10 rounded-full animate-float-delayed" />
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Welcome back badge for returning users */}
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6 text-primary-300 text-sm">
+              <span className="animate-pulse">🎯</span>
+              <span>Track your progress with our new learning streak feature!</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,8 +55,9 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
+              <Link href="/courses" className="btn-primary text-lg group">
+                <span>Browse Courses</span>
+                <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
@@ -40,19 +65,23 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          {/* Enhanced Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{instructors.length}+</div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
             </div>
           </div>
         </div>
@@ -81,6 +110,23 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Daily Tip Section - New! */}
+      <section className="py-16 bg-gradient-to-r from-primary-500/10 to-orange-500/10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="card p-8 text-center bg-navy-900/70 backdrop-blur-xl border-primary-500/20">
+            <div className="text-4xl mb-4">💡</div>
+            <h3 className="text-xl font-bold text-white mb-2">Daily Learning Tip</h3>
+            <p className="text-navy-300 text-lg">
+              &ldquo;Consistency beats intensity. Learning just 20 minutes a day builds stronger habits than 
+              marathon study sessions once a week.&rdquo;
+            </p>
+            <div className="mt-4 text-sm text-primary-400">
+              Build your streak by visiting daily! 🔥
+            </div>
           </div>
         </div>
       </section>
@@ -120,16 +166,23 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-32 h-32 bg-primary-500/10 rounded-full -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-500/10 rounded-full translate-x-1/2 translate-y-1/2" />
+            
+            <div className="relative">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+                Build your learning streak and unlock achievements along the way! 🏆
+              </p>
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
