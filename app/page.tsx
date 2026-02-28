@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,13 +27,20 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+              </span>
+              Now with progress tracking!
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
             </h1>
             <p className="text-xl text-navy-300 mb-8">
               Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
+              Track your progress and never lose your place.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/courses" className="btn-primary text-lg">
@@ -38,13 +50,22 @@ export default async function HomePage() {
                 Explore Categories
               </Link>
             </div>
+            
+            {/* Keyboard shortcut hint */}
+            <p className="mt-6 text-sm text-navy-500">
+              Pro tip: Press <kbd className="px-1.5 py-0.5 bg-navy-800 rounded text-navy-400 mx-1">⌘K</kbd> to quickly search
+            </p>
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
@@ -113,6 +134,48 @@ export default async function HomePage() {
             {instructors.map((instructor) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-2">Why Learn With Us?</h2>
+            <p className="text-navy-400">Features designed to help you succeed</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="card p-6 text-center">
+              <div className="w-14 h-14 bg-primary-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Progress Tracking</h3>
+              <p className="text-navy-400 text-sm">
+                Track your learning journey with our built-in progress tracker. Never lose your place again.
+              </p>
+            </div>
+            
+            <div className="card p-6 text-center">
+              <div className="w-14 h-14 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⌨️</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Quick Search</h3>
+              <p className="text-navy-400 text-sm">
+                Press ⌘K to instantly search through all courses, categories, and instructors.
+              </p>
+            </div>
+            
+            <div className="card p-6 text-center">
+              <div className="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">💻</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Code Examples</h3>
+              <p className="text-navy-400 text-sm">
+                Every lesson comes with real, copy-paste-ready code examples you can use right away.
+              </p>
+            </div>
           </div>
         </div>
       </section>
