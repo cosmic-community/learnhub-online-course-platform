@@ -46,6 +46,19 @@
   .badge-free {
     @apply bg-primary-500/20 text-primary-400;
   }
+
+  /* Achievement badges */
+  .achievement-badge {
+    @apply w-10 h-10 rounded-full flex items-center justify-center text-xl transition-all duration-300;
+  }
+
+  .achievement-unlocked {
+    @apply bg-gradient-to-br from-primary-500 to-purple-500 shadow-lg shadow-primary-500/30;
+  }
+
+  .achievement-locked {
+    @apply bg-navy-800 text-navy-600 grayscale;
+  }
 }
 
 /* Prose styles for markdown content */
@@ -104,4 +117,79 @@
 
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
+}
+
+/* Custom animations */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+@keyframes slide-in {
+  0% { 
+    opacity: 0; 
+    transform: translateX(100px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes pop-in {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, 10px) scale(0.9); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1); 
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(41, 171, 226, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(41, 171, 226, 0.6); 
+  }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.3s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Streak flame effect */
+.streak-flame {
+  position: relative;
+}
+
+.streak-flame::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(45deg, #ff6b6b, #feca57, #ff6b6b);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  filter: blur(8px);
+}
+
+.streak-flame:hover::after {
+  opacity: 0.5;
 }

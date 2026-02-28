@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickLearnButton from '@/components/QuickLearnButton'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,11 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
 
   return (
     <div>
@@ -22,6 +29,11 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Learning Streak Banner */}
+            <div className="mb-8">
+              <LearningStreak />
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -34,26 +46,53 @@ export default async function HomePage() {
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
+              <QuickLearnButton courses={courses} />
             </div>
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center card p-4">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center card p-4">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center card p-4">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center card p-4">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Achievements Teaser */}
+      <section className="py-12 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-pink-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="text-4xl">🏆</div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Earn Achievements</h3>
+                <p className="text-navy-300 text-sm">Complete courses and unlock badges</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="achievement-badge achievement-locked" title="First Lesson">📖</div>
+              <div className="achievement-badge achievement-locked" title="Week Streak">🔥</div>
+              <div className="achievement-badge achievement-locked" title="Course Complete">🎓</div>
+              <div className="achievement-badge achievement-locked" title="5 Courses">⭐</div>
+              <div className="achievement-badge achievement-locked" title="Master">👑</div>
+            </div>
+            <Link href="/achievements" className="btn-secondary text-sm">
+              View All Achievements
+            </Link>
           </div>
         </div>
       </section>
@@ -120,16 +159,21 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5" />
+            <div className="relative">
+              <div className="text-5xl mb-4">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+                Build your streak and earn achievements along the way!
+              </p>
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+            </div>
           </div>
         </div>
       </section>
