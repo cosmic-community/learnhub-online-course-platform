@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,13 +27,17 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="text-lg">🔥</span>
+              <span className="text-primary-400 text-sm font-medium">Track your learning streak & earn rewards!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
             </h1>
             <p className="text-xl text-navy-300 mb-8">
               Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
+              Build your learning streak and track your progress!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/courses" className="btn-primary text-lg">
@@ -41,18 +50,53 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-xl bg-navy-900/50 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/50 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/50 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/50 border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Streak Motivation Banner */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-primary-500/10 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-center md:text-left">
+            <div className="flex items-center gap-3">
+              <span className="text-4xl">🎯</span>
+              <div>
+                <h3 className="text-white font-semibold">Build Your Learning Streak</h3>
+                <p className="text-navy-300 text-sm">Complete lessons daily to maintain your streak</p>
+              </div>
+            </div>
+            <div className="hidden md:block w-px h-12 bg-navy-700" />
+            <div className="flex items-center gap-3">
+              <span className="text-4xl">🏆</span>
+              <div>
+                <h3 className="text-white font-semibold">Unlock Milestones</h3>
+                <p className="text-navy-300 text-sm">Celebrate at 7, 14, 30 day streaks!</p>
+              </div>
+            </div>
+            <div className="hidden md:block w-px h-12 bg-navy-700" />
+            <div className="flex items-center gap-3">
+              <span className="text-4xl">🎉</span>
+              <div>
+                <h3 className="text-white font-semibold">Confetti Celebrations</h3>
+                <p className="text-navy-300 text-sm">Every lesson complete = celebration!</p>
+              </div>
             </div>
           </div>
         </div>
@@ -120,16 +164,23 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
+          <div className="card p-12 bg-gradient-to-br from-navy-900/80 to-navy-900/50">
+            <div className="text-6xl mb-6">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
+              Ready to start your learning journey?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
+              Join thousands of students and start building your skills today.
+              Track your progress, maintain your streak, and celebrate every win!
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+              <Link href="/contact" className="btn-secondary text-lg">
+                Have Questions?
+              </Link>
+            </div>
           </div>
         </div>
       </section>

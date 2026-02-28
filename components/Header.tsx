@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import LearningStreak from './LearningStreak'
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 bg-navy-950/80 backdrop-blur-lg border-b border-navy-800">
@@ -18,80 +19,72 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/courses"
-              className="text-navy-300 hover:text-white transition-colors"
-            >
+            <Link href="/courses" className="text-navy-300 hover:text-white transition-colors">
               Courses
             </Link>
-            <Link
-              href="/categories"
-              className="text-navy-300 hover:text-white transition-colors"
-            >
+            <Link href="/categories" className="text-navy-300 hover:text-white transition-colors">
               Categories
             </Link>
-            <Link
-              href="/contact"
-              className="text-navy-300 hover:text-white transition-colors"
-            >
+            <Link href="/contact" className="text-navy-300 hover:text-white transition-colors">
               Contact
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Right side - Streak + CTA */}
           <div className="hidden md:flex items-center gap-4">
+            <LearningStreak />
             <Link href="/courses" className="btn-primary">
               Start Learning
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile menu button */}
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-navy-300 hover:text-white"
-            aria-label="Toggle menu"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-navy-300 hover:text-white p-2"
           >
-            {isMobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
+              )}
+            </svg>
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
+        {/* Mobile menu */}
+        {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-navy-800">
             <nav className="flex flex-col gap-4">
-              <Link
-                href="/courses"
-                className="text-navy-300 hover:text-white transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Link 
+                href="/courses" 
+                className="text-navy-300 hover:text-white transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Courses
               </Link>
-              <Link
-                href="/categories"
-                className="text-navy-300 hover:text-white transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Link 
+                href="/categories" 
+                className="text-navy-300 hover:text-white transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Categories
               </Link>
-              <Link
-                href="/contact"
-                className="text-navy-300 hover:text-white transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Link 
+                href="/contact" 
+                className="text-navy-300 hover:text-white transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Contact
               </Link>
-              <Link
-                href="/courses"
+              <div className="pt-2">
+                <LearningStreak />
+              </div>
+              <Link 
+                href="/courses" 
                 className="btn-primary text-center mt-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => setIsMenuOpen(false)}
               >
                 Start Learning
               </Link>
