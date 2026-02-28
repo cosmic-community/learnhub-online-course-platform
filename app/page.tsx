@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickSearch from '@/components/QuickSearch'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -21,6 +23,12 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          {/* Quick Search and Streak Row */}
+          <div className="flex items-center justify-between mb-12">
+            <QuickSearch courses={courses} categories={categories} instructors={instructors} />
+            <LearningStreak />
+          </div>
+          
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
