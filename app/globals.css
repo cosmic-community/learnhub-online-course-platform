@@ -105,3 +105,70 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Animations for gamification */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(41, 171, 226, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(41, 171, 226, 0.2);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Achievement badge styles */
+.achievement-badge {
+  @apply relative inline-flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300;
+}
+
+.achievement-badge::before {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s linear infinite;
+}
+
+.achievement-unlocked {
+  @apply bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30 text-yellow-400;
+}
+
+.achievement-locked {
+  @apply bg-navy-800/50 border-navy-700 text-navy-500;
+}
