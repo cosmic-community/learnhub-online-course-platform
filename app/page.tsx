@@ -58,6 +58,21 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Streak Teaser Banner */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-primary-500/10 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="text-4xl">🔥</div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Build Your Learning Streak!</h3>
+              <p className="text-navy-300 text-sm">
+                Visit daily to maintain your streak, unlock milestones, and celebrate with confetti! 🎉
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
