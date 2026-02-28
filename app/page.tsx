@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickStartSection from '@/components/QuickStartSection'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -57,6 +59,22 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Streak & Quick Start - Personalized Section */}
+      <section className="py-12 bg-navy-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Learning Streak */}
+            <LearningStreak />
+            
+            {/* Daily Tip */}
+            <DailyTip />
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Start / Continue Learning */}
+      <QuickStartSection courses={courses} />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
@@ -133,6 +151,45 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+    </div>
+  )
+}
+
+// Daily Learning Tip Component
+function DailyTip() {
+  const tips = [
+    { icon: '🎯', title: 'Focus Mode', tip: 'Try studying in 25-minute focused sessions with 5-minute breaks (Pomodoro Technique).' },
+    { icon: '📝', title: 'Active Learning', tip: 'Take notes while watching lessons - you retain 50% more information!' },
+    { icon: '🔄', title: 'Spaced Repetition', tip: 'Review material after 1 day, 3 days, and 7 days for long-term retention.' },
+    { icon: '💻', title: 'Practice Daily', tip: 'Code along with tutorials. Typing the code yourself builds muscle memory.' },
+    { icon: '🤝', title: 'Teach Others', tip: 'Explaining concepts to someone else is the best way to solidify your knowledge.' },
+    { icon: '🌙', title: 'Sleep on It', tip: 'Your brain consolidates learning during sleep. Get those 8 hours!' },
+    { icon: '🎮', title: 'Make It Fun', tip: 'Build projects you care about. Personal projects keep motivation high.' },
+  ]
+  
+  // Use date to pick a consistent tip for the day
+  const today = new Date()
+  const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000)
+  const tipOfTheDay = tips[dayOfYear % tips.length]
+
+  return (
+    <div className="card p-6 h-full flex flex-col">
+      <div className="flex items-start gap-4">
+        <div className="text-4xl">{tipOfTheDay.icon}</div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="text-lg font-semibold text-white">Tip of the Day</h3>
+            <span className="text-xs text-navy-500 bg-navy-800 px-2 py-0.5 rounded-full">
+              {tipOfTheDay.title}
+            </span>
+          </div>
+          <p className="text-navy-300">{tipOfTheDay.tip}</p>
+        </div>
+      </div>
+      <div className="mt-auto pt-4 text-xs text-navy-500 flex items-center gap-2">
+        <span>💡</span>
+        <span>New tip every day</span>
+      </div>
     </div>
   )
 }
