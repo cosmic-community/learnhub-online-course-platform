@@ -105,3 +105,65 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Animation utilities for the Learning Progress component */
+@keyframes slide-in-from-bottom-5 {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoom-in-95 {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-bottom-5 {
+  animation: slide-in-from-bottom-5 0.3s ease-out;
+}
+
+.zoom-in-95 {
+  animation: zoom-in-95 0.5s ease-out;
+}
+
+.duration-300 {
+  animation-duration: 300ms;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+/* Smooth progress ring animation */
+@keyframes progress-ring {
+  0% {
+    stroke-dashoffset: 283;
+  }
+}
+
+/* Celebration confetti effect */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px) rotate(720deg);
+    opacity: 0;
+  }
+}
