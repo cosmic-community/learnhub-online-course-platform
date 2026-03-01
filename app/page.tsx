@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import DailyGoal from '@/components/DailyGoal'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -21,6 +23,11 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          {/* Learning Streak Widget - Top Right */}
+          <div className="absolute top-8 right-4 sm:right-8 z-10">
+            <LearningStreak />
+          </div>
+
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
@@ -55,6 +62,13 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Daily Goal Section - New! */}
+      <section className="py-8 -mt-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <DailyGoal />
         </div>
       </section>
 
