@@ -12,6 +12,9 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length ?? 0)
+  }, 0)
 
   return (
     <div>
@@ -22,6 +25,10 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="text-sm">🎯</span>
+              <span className="text-sm text-primary-400 font-medium">Track your learning streak!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,18 +48,45 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Streak Motivation Banner */}
+      <section className="py-8 bg-gradient-to-r from-primary-600/20 via-purple-600/20 to-pink-600/20 border-y border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="text-4xl">🔥</div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Build Your Learning Streak!</h3>
+                <p className="text-navy-300 text-sm">Visit daily to unlock achievements and track your progress</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2">
+                <span className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-sm">3🔥</span>
+                <span className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-sm">7🌟</span>
+                <span className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center text-sm">30🏆</span>
+              </div>
+              <span className="text-navy-400 text-sm">Unlock milestones!</span>
             </div>
           </div>
         </div>
@@ -121,11 +155,13 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-4">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
+              Build your streak, earn achievements, and level up your career!
             </p>
             <Link href="/courses" className="btn-primary text-lg">
               Get Started Now
