@@ -58,6 +58,23 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Gamification Banner */}
+      <section className="bg-gradient-to-r from-primary-600/20 via-primary-500/10 to-primary-600/20 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-3xl">🏆</span>
+              <span className="text-2xl">✨</span>
+              <span className="text-3xl">🎮</span>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-lg">Earn achievements as you explore!</h3>
+              <p className="text-navy-300 text-sm">Click the trophy button to track your learning progress and unlock badges</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
