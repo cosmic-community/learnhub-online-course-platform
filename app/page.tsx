@@ -1,14 +1,18 @@
 import Link from 'next/link'
-import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
+import { getCourses, getCategories, getInstructors, getLessons } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickStats from '@/components/QuickStats'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
-  const [courses, categories, instructors] = await Promise.all([
+  const [courses, categories, instructors, lessons] = await Promise.all([
     getCourses(),
     getCategories(),
     getInstructors(),
+    getLessons(),
   ])
 
   const featuredCourses = courses.slice(0, 3)
@@ -21,39 +25,50 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Learn skills that
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
-            </h1>
-            <p className="text-xl text-navy-300 mb-8">
-              Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
-              </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
+          <div className="grid lg:grid-cols-3 gap-12 items-start">
+            {/* Main Hero Content */}
+            <div className="lg:col-span-2 text-center lg:text-left">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                Learn skills that
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
+              </h1>
+              <p className="text-xl text-navy-300 mb-8">
+                Master web development, design, and more with expert-led courses. 
+                Start your learning journey today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Browse Courses
+                </Link>
+                <Link href="/categories" className="btn-secondary text-lg">
+                  Explore Categories
+                </Link>
+              </div>
+              
+              {/* Quick Stats - Below buttons on desktop */}
+              <div className="mt-12 hidden lg:block">
+                <QuickStats 
+                  totalCourses={courses.length} 
+                  totalLessons={lessons.length}
+                  totalInstructors={instructors.length}
+                />
+              </div>
+            </div>
+
+            {/* Sidebar with Streak & Daily Tip */}
+            <div className="space-y-6">
+              <LearningStreak />
+              <DailyTip />
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
+          {/* Mobile Stats */}
+          <div className="mt-12 lg:hidden">
+            <QuickStats 
+              totalCourses={courses.length} 
+              totalLessons={lessons.length}
+              totalInstructors={instructors.length}
+            />
           </div>
         </div>
       </section>
