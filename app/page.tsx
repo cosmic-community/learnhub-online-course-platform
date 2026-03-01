@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningProgress from '@/components/LearningProgress'
+import SkillBadges from '@/components/SkillBadges'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,14 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+
+  // Calculate total learning minutes from all lessons
+  const totalLearningMinutes = courses.reduce((total, course) => {
+    const lessons = course.metadata?.lessons || []
+    return total + lessons.reduce((lessonTotal, lesson) => {
+      return lessonTotal + (lesson.metadata?.duration_minutes || 0)
+    }, 0)
+  }, 0)
 
   return (
     <div>
@@ -54,6 +64,24 @@ export default async function HomePage() {
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Progress Section - NEW! */}
+      <section className="py-16 bg-gradient-to-r from-primary-500/5 via-navy-900/50 to-primary-500/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-white mb-2">Your Learning Journey</h2>
+            <p className="text-navy-400">Track your progress and earn achievements</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <LearningProgress 
+              totalCourses={courses.length} 
+              totalMinutes={totalLearningMinutes}
+            />
+            <SkillBadges categories={categories} />
           </div>
         </div>
       </section>
