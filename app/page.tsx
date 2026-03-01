@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStats from '@/components/LearningStats'
+import AchievementBadges from '@/components/AchievementBadges'
+import WelcomeMessage from '@/components/WelcomeMessage'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +15,16 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours from courses
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+  
+  // Count total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
 
   return (
     <div>
@@ -22,6 +35,9 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Welcome Message - Time-based greeting */}
+            <WelcomeMessage />
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,32 +47,24 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
-                Browse Courses
+              <Link href="/courses" className="btn-primary text-lg group">
+                <span>Browse Courses</span>
+                <span className="inline-block ml-2 transition-transform group-hover:translate-x-1">→</span>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
               </Link>
             </div>
           </div>
-          
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
-            </div>
-          </div>
         </div>
       </section>
+
+      {/* Learning Stats - NEW DELIGHTFUL SECTION */}
+      <LearningStats 
+        totalCourses={courses.length} 
+        totalLessons={totalLessons} 
+        totalHours={totalHours || 50}
+      />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
@@ -66,8 +74,9 @@ export default async function HomePage() {
               <h2 className="text-3xl font-bold text-white mb-2">Featured Courses</h2>
               <p className="text-navy-400">Start learning with our most popular courses</p>
             </div>
-            <Link href="/courses" className="btn-secondary hidden sm:inline-flex">
-              View All Courses
+            <Link href="/courses" className="btn-secondary hidden sm:inline-flex group">
+              <span>View All Courses</span>
+              <span className="inline-block ml-2 transition-transform group-hover:translate-x-1">→</span>
             </Link>
           </div>
           
@@ -85,8 +94,17 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Achievements Section - NEW GAMIFICATION */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="card p-8">
+            <AchievementBadges />
+          </div>
+        </div>
+      </section>
+
       {/* Categories */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +120,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,18 +136,27 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Animated background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 to-purple-500/5" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+            
+            <div className="relative">
+              <div className="text-5xl mb-6">🚀</div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <Link href="/courses" className="btn-primary text-lg group">
+                <span>Get Started Now</span>
+                <span className="inline-block ml-2 transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
