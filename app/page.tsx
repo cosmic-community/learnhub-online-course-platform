@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathQuiz from '@/components/LearningPathQuiz'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -55,6 +56,24 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Learning Path Quiz Section - NEW! */}
+      <section className="py-20 bg-gradient-to-b from-navy-900/50 to-navy-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-4">
+              <span className="text-2xl">✨</span>
+              <span className="text-primary-400 font-medium">New Feature</span>
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">Find Your Perfect Learning Path</h2>
+            <p className="text-navy-400 max-w-2xl mx-auto">
+              Not sure where to start? Take our quick quiz and get personalized course recommendations based on your goals and experience level.
+            </p>
+          </div>
+          
+          <LearningPathQuiz courses={courses} categories={categories} />
         </div>
       </section>
 
