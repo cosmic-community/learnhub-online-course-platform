@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningJourney from '@/components/LearningJourney'
+import CourseSpotlight from '@/components/CourseSpotlight'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,10 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Pick a "Course of the Day" based on the current date
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000)
+  const spotlightCourse = courses.length > 0 ? courses[dayOfYear % courses.length] : null
 
   return (
     <div>
@@ -57,6 +63,18 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Learning Journey Section - NEW! */}
+      <LearningJourney totalCourses={courses.length} totalCategories={categories.length} />
+
+      {/* Course Spotlight - NEW! */}
+      {spotlightCourse && (
+        <section className="py-16 bg-gradient-to-r from-primary-500/5 via-navy-900/50 to-primary-500/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <CourseSpotlight course={spotlightCourse} />
+          </div>
+        </section>
+      )}
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
