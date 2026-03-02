@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +14,20 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+
+  // Generate learning tips from course content
+  const learningTips = [
+    { tip: "Practice coding for at least 30 minutes every day to build muscle memory.", icon: "💪" },
+    { tip: "Break complex problems into smaller, manageable pieces.", icon: "🧩" },
+    { tip: "Teaching others is one of the best ways to solidify your understanding.", icon: "🎓" },
+    { tip: "Take regular breaks - the Pomodoro technique (25 min work, 5 min break) works great!", icon: "⏰" },
+    { tip: "Build projects that interest you personally - motivation drives learning.", icon: "🚀" },
+    { tip: "Read documentation before Stack Overflow - you'll learn more fundamentals.", icon: "📚" },
+    { tip: "Code reviews aren't criticism - they're opportunities to learn new perspectives.", icon: "👀" },
+    { tip: "Embrace errors and bugs - debugging is where real learning happens.", icon: "🐛" },
+    { tip: "Consistency beats intensity - small daily progress compounds over time.", icon: "📈" },
+    { tip: "Join a community - learning with others keeps you accountable and motivated.", icon: "🤝" },
+  ]
 
   return (
     <div>
@@ -54,6 +70,16 @@ export default async function HomePage() {
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Progress & Daily Tip Section */}
+      <section className="py-12 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <LearningStreak />
+            <DailyTip tips={learningTips} />
           </div>
         </div>
       </section>
