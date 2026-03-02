@@ -48,6 +48,198 @@
   }
 }
 
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, var(--tw-gradient-from), var(--tw-gradient-to));
+  border-radius: 50%;
+  animation: float 15s linear infinite;
+  opacity: 0;
+}
+
+.particle-1 {
+  --tw-gradient-from: #6366f1;
+  --tw-gradient-to: #8b5cf6;
+  left: 10%;
+  animation-delay: 0s;
+  width: 8px;
+  height: 8px;
+}
+
+.particle-2 {
+  --tw-gradient-from: #8b5cf6;
+  --tw-gradient-to: #a855f7;
+  left: 30%;
+  animation-delay: 3s;
+  width: 6px;
+  height: 6px;
+}
+
+.particle-3 {
+  --tw-gradient-from: #6366f1;
+  --tw-gradient-to: #3b82f6;
+  left: 50%;
+  animation-delay: 6s;
+  width: 10px;
+  height: 10px;
+}
+
+.particle-4 {
+  --tw-gradient-from: #a855f7;
+  --tw-gradient-to: #6366f1;
+  left: 70%;
+  animation-delay: 9s;
+  width: 7px;
+  height: 7px;
+}
+
+.particle-5 {
+  --tw-gradient-from: #3b82f6;
+  --tw-gradient-to: #6366f1;
+  left: 90%;
+  animation-delay: 12s;
+  width: 9px;
+  height: 9px;
+}
+
+/* Celebration particles */
+.celebration-particle {
+  position: absolute;
+  font-size: 24px;
+  animation: celebration 2s ease-out forwards;
+}
+
+.celebration-1 {
+  top: 50%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.celebration-2 {
+  top: 40%;
+  left: 40%;
+  animation-delay: 0.2s;
+}
+
+.celebration-3 {
+  top: 60%;
+  left: 60%;
+  animation-delay: 0.4s;
+}
+
+.celebration-4 {
+  top: 50%;
+  left: 80%;
+  animation-delay: 0.6s;
+}
+
+.celebration-5 {
+  top: 30%;
+  left: 50%;
+  animation-delay: 0.8s;
+}
+
+/* Counter animation for stats */
+.counter-animation {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.counter-animation:hover {
+  transform: scale(1.1);
+}
+
+/* Tabular numbers for consistent width */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-navy-200 leading-relaxed;
