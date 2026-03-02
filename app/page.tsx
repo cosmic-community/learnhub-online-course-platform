@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningJourney from '@/components/LearningJourney'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,15 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours
+  const totalHours = courses.reduce((sum, course) => sum + (course.metadata?.estimated_hours || 0), 0)
+  
+  // Count total lessons across all courses
+  const totalLessons = courses.reduce((sum, course) => {
+    const lessons = course.metadata?.lessons
+    return sum + (Array.isArray(lessons) ? lessons.length : 0)
+  }, 0)
 
   return (
     <div>
@@ -55,6 +65,23 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Learning Journey - New Delightful Section */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-purple-500/5 to-primary-500/5" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-white mb-2">Your Learning Journey Awaits</h2>
+            <p className="text-navy-400">Unlock your potential with our comprehensive learning paths</p>
+          </div>
+          <LearningJourney 
+            totalCourses={courses.length}
+            totalHours={totalHours}
+            totalLessons={totalLessons}
+            categories={categories.slice(0, 4)}
+          />
         </div>
       </section>
 
