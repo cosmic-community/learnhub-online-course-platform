@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathQuiz from '@/components/LearningPathQuiz'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -30,13 +31,11 @@ export default async function HomePage() {
               Master web development, design, and more with expert-led courses. 
               Start your learning journey today.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
-              </Link>
+              <LearningPathQuiz courses={courses} />
             </div>
           </div>
           
@@ -53,6 +52,35 @@ export default async function HomePage() {
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* New: Why LearnHub Section */}
+      <section className="py-16 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-navy-900/50 to-transparent border border-navy-800/50">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                🎯
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Learn by Doing</h3>
+              <p className="text-navy-400 text-sm">Hands-on projects and real-world examples in every course</p>
+            </div>
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-navy-900/50 to-transparent border border-navy-800/50">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                👨‍🏫
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Expert Instructors</h3>
+              <p className="text-navy-400 text-sm">Learn from industry professionals with real experience</p>
+            </div>
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-navy-900/50 to-transparent border border-navy-800/50">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                📱
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Learn Anywhere</h3>
+              <p className="text-navy-400 text-sm">Access courses on any device, at your own pace</p>
             </div>
           </div>
         </div>
