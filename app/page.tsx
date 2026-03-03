@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -15,6 +16,9 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Learning Streak Banner */}
+      <LearningStreak />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
