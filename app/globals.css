@@ -105,3 +105,107 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Custom animations for gamification */
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: translateX(-50%) scale(0) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-confetti {
+  animation: confetti 3s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 20px theme('colors.primary.500 / 30%');
+}
+
+.glow-orange {
+  box-shadow: 0 0 20px theme('colors.orange.500 / 30%');
+}
