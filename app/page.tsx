@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningDashboard from '@/components/LearningDashboard'
+import WelcomeModal from '@/components/WelcomeModal'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -15,6 +17,9 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Welcome Modal with Confetti */}
+      <WelcomeModal />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -55,6 +60,13 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Learning Dashboard Section - NEW! */}
+      <section className="py-12 -mt-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LearningDashboard />
         </div>
       </section>
 
