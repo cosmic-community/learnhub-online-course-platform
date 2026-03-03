@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -15,6 +17,9 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Learning Streak Banner */}
+      <LearningStreak />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -55,6 +60,13 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Daily Tip Section */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 to-purple-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <DailyTip />
         </div>
       </section>
 
