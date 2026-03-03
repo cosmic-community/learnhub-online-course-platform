@@ -105,3 +105,74 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Tailwind CSS animation utilities */
+@layer utilities {
+  .animate-in {
+    animation: animateIn 0.5s ease-out forwards;
+  }
+  
+  .fade-in {
+    opacity: 0;
+  }
+  
+  .slide-in-from-bottom-4 {
+    transform: translateY(1rem);
+  }
+  
+  .slide-in-from-top-4 {
+    transform: translateY(-1rem);
+  }
+  
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+  
+  .delay-700 {
+    animation-delay: 700ms;
+  }
+  
+  .duration-700 {
+    animation-duration: 700ms;
+  }
+}
+
+@keyframes animateIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Custom scrollbar for quick search */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: theme('colors.navy.700');
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.navy.600');
+}
