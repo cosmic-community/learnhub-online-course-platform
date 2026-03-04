@@ -195,6 +195,23 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   }
 }
 
+// Get total lesson count
+export async function getLessonCount(): Promise<number> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'lessons' })
+      .props(['id'])
+      .limit(1)
+    
+    return response.total ?? 0
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return 0
+    }
+    return 0
+  }
+}
+
 // Submit contact form
 export async function submitContactForm(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
   try {
@@ -222,4 +239,24 @@ export async function submitContactForm(data: ContactFormData): Promise<{ succes
       error: 'Failed to submit contact form. Please try again.' 
     }
   }
+}
+
+// Calculate estimated reading time for markdown content
+export function calculateReadingTime(content: string): number {
+  if (!content) return 1
+  const wordsPerMinute = 200
+  const codeBlockTime = 30 // seconds per code block
+  
+  // Count words (excluding code blocks)
+  const textWithoutCode = content.replace(/```[\s\S]*?```/g, '')
+  const wordCount = textWithoutCode.split(/\s+/).filter(word => word.length > 0).length
+  
+  // Count code blocks
+  const codeBlocks = (content.match(/```[\s\S]*?```/g) || []).length
+  
+  // Calculate total time
+  const readingTimeMinutes = Math.ceil(wordCount / wordsPerMinute)
+  const codeTimeMinutes = Math.ceil((codeBlocks * codeBlockTime) / 60)
+  
+  return Math.max(1, readingTimeMinutes + codeTimeMinutes)
 }
