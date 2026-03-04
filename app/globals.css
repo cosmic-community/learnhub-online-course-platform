@@ -105,3 +105,148 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Progress Ring Animation */
+@keyframes progress-ring {
+  0% {
+    stroke-dashoffset: 100;
+  }
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+/* Streak Fire Animation */
+@keyframes flame-flicker {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.05) rotate(-2deg);
+    filter: brightness(1.1);
+  }
+  50% {
+    transform: scale(1.1) rotate(2deg);
+    filter: brightness(1.2);
+  }
+  75% {
+    transform: scale(1.05) rotate(-1deg);
+    filter: brightness(1.1);
+  }
+}
+
+.flame-animate {
+  animation: flame-flicker 0.8s ease-in-out infinite;
+}
+
+/* Achievement Toast Animation */
+@keyframes slide-in-bounce {
+  0% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-5%) scale(1.02);
+  }
+  70% {
+    transform: translateX(2%) scale(0.98);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: slide-in-bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast-exit {
+  animation: slide-out 0.3s ease-in forwards;
+}
+
+/* Confetti Animation */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  position: fixed;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  animation: confetti-fall linear forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Sparkle Animation */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Pulse Glow Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.8), 0 0 30px rgba(99, 102, 241, 0.4);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Number Counter Animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-animate {
+  animation: count-up 0.3s ease-out;
+}

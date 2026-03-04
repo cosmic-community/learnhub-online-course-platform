@@ -1,116 +1,136 @@
 import Link from 'next/link'
 import type { Course } from '@/types'
-import DifficultyBadge from './DifficultyBadge'
+import ProgressRing from './ProgressRing'
 
 interface CourseCardProps {
   course: Course
+  showProgress?: boolean
+  progress?: number
 }
 
-export default function CourseCard({ course }: CourseCardProps) {
+function getDifficultyValue(difficulty: Course['metadata']['difficulty']): string {
+  if (!difficulty) return 'beginner'
+  if (typeof difficulty === 'string') return difficulty.toLowerCase()
+  if (typeof difficulty === 'object' && difficulty.value) {
+    return difficulty.value.toLowerCase()
+  }
+  return 'beginner'
+}
+
+export default function CourseCard({ course, showProgress = false, progress = 0 }: CourseCardProps) {
   const { metadata } = course
-  const thumbnail = metadata?.thumbnail
-  const instructors = metadata?.instructors || []
-  const categories = metadata?.categories || []
-  const lessons = metadata?.lessons || []
+  const difficultyValue = getDifficultyValue(metadata?.difficulty)
 
   return (
     <Link href={`/courses/${course.slug}`} className="card group block">
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
-        {thumbnail ? (
+        {metadata?.thumbnail?.imgix_url ? (
           <img
-            src={`${thumbnail.imgix_url}?w=800&h=450&fit=crop&auto=format,compress`}
-            alt={course.title}
-            width={400}
-            height={225}
+            src={`${metadata.thumbnail.imgix_url}?w=800&h=450&fit=crop&auto=format,compress`}
+            alt={metadata.title || course.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-navy-700 to-navy-800 flex items-center justify-center">
-            <span className="text-5xl">📚</span>
+          <div className="w-full h-full bg-gradient-to-br from-primary-500/20 to-navy-800 flex items-center justify-center">
+            <span className="text-4xl">📚</span>
           </div>
         )}
         
-        {/* Price Badge */}
-        <div className="absolute top-4 right-4">
-          {metadata?.is_free ? (
-            <span className="badge badge-free">Free</span>
-          ) : (
-            <span className="badge bg-navy-900/90 text-white">
-              ${metadata?.price || 0}
+        {/* Progress Ring Overlay */}
+        {showProgress && progress > 0 && (
+          <div className="absolute top-3 right-3">
+            <ProgressRing progress={progress} size={40} strokeWidth={3} />
+          </div>
+        )}
+        
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex gap-2">
+          {metadata?.is_free && (
+            <span className="badge badge-free backdrop-blur-sm">
+              Free
             </span>
           )}
+          <span className={`badge backdrop-blur-sm badge-${difficultyValue}`}>
+            {difficultyValue.charAt(0).toUpperCase() + difficultyValue.slice(1)}
+          </span>
         </div>
       </div>
 
       {/* Content */}
       <div className="p-6">
         {/* Categories */}
-        {categories.length > 0 && (
+        {metadata?.categories && metadata.categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
-            {categories.slice(0, 2).map((category) => (
-              <span
-                key={category.id}
-                className="text-xs text-navy-400"
-              >
-                {category.metadata?.icon} {category.metadata?.name || category.title}
+            {metadata.categories.slice(0, 2).map((cat) => (
+              <span key={cat.id} className="text-xs text-primary-400 font-medium">
+                {cat.metadata?.icon} {cat.metadata?.name || cat.title}
               </span>
             ))}
           </div>
         )}
 
-        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors line-clamp-2">
-          {course.title}
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-primary-400 transition-colors line-clamp-2">
+          {metadata?.title || course.title}
         </h3>
 
-        {metadata?.tagline && (
-          <p className="text-navy-400 text-sm mb-4 line-clamp-2">
-            {metadata.tagline}
-          </p>
-        )}
+        <p className="text-navy-400 text-sm mb-4 line-clamp-2">
+          {metadata?.tagline}
+        </p>
 
-        {/* Meta Info */}
-        <div className="flex items-center gap-4 text-sm text-navy-400">
-          {metadata?.difficulty && (
-            <DifficultyBadge difficulty={metadata.difficulty} size="small" />
-          )}
+        {/* Meta info */}
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-4 text-navy-500">
+            {metadata?.estimated_hours && (
+              <span className="flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {metadata.estimated_hours}h
+              </span>
+            )}
+            {metadata?.lessons && (
+              <span className="flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                {metadata.lessons.length} lessons
+              </span>
+            )}
+          </div>
           
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            {lessons.length} lessons
-          </span>
-          
-          {metadata?.estimated_hours && (
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {metadata.estimated_hours}h
+          {!metadata?.is_free && metadata?.price && (
+            <span className="font-bold text-white">
+              ${metadata.price}
             </span>
           )}
         </div>
 
-        {/* Instructor */}
-        {instructors.length > 0 && instructors[0] && (
-          <div className="mt-4 pt-4 border-t border-navy-800 flex items-center gap-3">
-            {instructors[0].metadata?.photo ? (
-              <img
-                src={`${instructors[0].metadata.photo.imgix_url}?w=64&h=64&fit=crop&auto=format,compress`}
-                alt={instructors[0].metadata?.name || instructors[0].title}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
-                👨‍🏫
+        {/* Instructors */}
+        {metadata?.instructors && metadata.instructors.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-navy-800">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {metadata.instructors.slice(0, 3).map((instructor) => (
+                  <div key={instructor.id} className="w-8 h-8 rounded-full border-2 border-navy-900 overflow-hidden">
+                    {instructor.metadata?.photo?.imgix_url ? (
+                      <img
+                        src={`${instructor.metadata.photo.imgix_url}?w=64&h=64&fit=crop&auto=format,compress`}
+                        alt={instructor.metadata.name || instructor.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-primary-500/20 flex items-center justify-center text-xs">
+                        {(instructor.metadata?.name || instructor.title)?.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
-            <span className="text-sm text-navy-300">
-              {instructors[0].metadata?.name || instructors[0].title}
-            </span>
+              <span className="text-sm text-navy-400">
+                {metadata.instructors.map(i => i.metadata?.name || i.title).join(', ')}
+              </span>
+            </div>
           </div>
         )}
       </div>
