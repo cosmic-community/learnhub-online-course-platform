@@ -1,6 +1,6 @@
 {
-  "name": "learnhub",
-  "version": "1.0.0",
+  "name": "learnhub-online-course-platform",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,28 +8,28 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "prebuild": "bun run type-check",
-    "postbuild": "node scripts/inject-console-capture.js"
+    "prebuild": "bun run type-check"
   },
   "dependencies": {
-    "@cosmicjs/sdk": "^1.5.6",
-    "next": "15.1.9",
+    "@cosmicjs/sdk": "^1.6.0",
+    "canvas-confetti": "^1.9.3",
+    "next": "16.0.10",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.6.1"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20.10.0",
     "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.1",
-    "@types/react-syntax-highlighter": "^15.5.13",
-    "autoprefixer": "^10.4.0",
-    "eslint": "^9.0.0",
-    "eslint-config-next": "15.1.9",
-    "glob": "^10.3.10",
-    "postcss": "^8.4.0",
-    "tailwindcss": "^3.4.0",
-    "typescript": "^5.0.0"
+    "@types/react-dom": "^19.0.2",
+    "@types/react-syntax-highlighter": "^15.5.11",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "16.0.10",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.2"
   }
 }
