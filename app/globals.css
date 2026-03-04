@@ -46,6 +46,108 @@
   .badge-free {
     @apply bg-primary-500/20 text-primary-400;
   }
+
+  /* Learning Streak Animations */
+  .streak-fire {
+    @apply animate-pulse;
+    filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.5));
+  }
+
+  .streak-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 5px theme('colors.orange.400'), 0 0 10px theme('colors.orange.400'), 0 0 15px theme('colors.orange.400');
+    }
+    to {
+      box-shadow: 0 0 10px theme('colors.orange.500'), 0 0 20px theme('colors.orange.500'), 0 0 30px theme('colors.orange.500');
+    }
+  }
+
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .pulse-ring {
+    animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.5);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(251, 146, 60, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(251, 146, 60, 0);
+    }
+  }
+
+  .slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    animation: confetti-fall 3s linear forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100%) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  .tip-card {
+    @apply bg-gradient-to-br from-primary-500/10 via-navy-900/50 to-navy-900/50 border border-primary-500/20 rounded-2xl;
+  }
+
+  .number-animate {
+    animation: countUp 1s ease-out;
+  }
+
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 /* Prose styles for markdown content */
