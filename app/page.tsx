@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import QuickStartWidget from '@/components/QuickStartWidget'
+import MotivationalQuote from '@/components/MotivationalQuote'
+import WelcomeConfetti from '@/components/WelcomeConfetti'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,9 +15,19 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  const beginnerCourses = courses.filter(c => {
+    const difficulty = c.metadata?.difficulty
+    if (typeof difficulty === 'object' && difficulty !== null && 'value' in difficulty) {
+      return (difficulty as { value: string }).value?.toLowerCase() === 'beginner'
+    }
+    return String(difficulty || '').toLowerCase() === 'beginner'
+  })
 
   return (
     <div>
+      {/* Welcome Confetti for first-time visitors */}
+      <WelcomeConfetti />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
@@ -40,23 +53,39 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
+          {/* Stats with animated counters */}
           <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+            <div className="text-center group">
+              <div className="text-3xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Motivational Quote Banner */}
+      <section className="py-8 bg-gradient-to-r from-primary-600/20 via-primary-500/10 to-primary-600/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <MotivationalQuote />
+        </div>
+      </section>
+
+      {/* Quick Start Widget */}
+      {beginnerCourses.length > 0 && (
+        <section className="py-12 bg-navy-900/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <QuickStartWidget courses={beginnerCourses.slice(0, 3)} />
+          </div>
+        </section>
+      )}
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
