@@ -34,8 +34,9 @@ export default async function HomePage() {
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
+              <Link href="/progress" className="btn-secondary text-lg flex items-center gap-2">
+                <span>My Progress</span>
+                <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" />
               </Link>
             </div>
           </div>
@@ -127,9 +128,14 @@ export default async function HomePage() {
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+              <Link href="/progress" className="btn-secondary text-lg">
+                Track Your Progress
+              </Link>
+            </div>
           </div>
         </div>
       </section>
