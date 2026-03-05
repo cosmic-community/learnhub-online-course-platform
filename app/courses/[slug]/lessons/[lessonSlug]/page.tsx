@@ -1,190 +1,228 @@
 // app/courses/[slug]/lessons/[lessonSlug]/page.tsx
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getCourseBySlug, getCourses } from '@/lib/cosmic'
-import MarkdownContent from '@/components/MarkdownContent'
+import { getCourseBySlug, getLessonBySlug } from '@/lib/cosmic'
 import CodeBlock from '@/components/CodeBlock'
-import VideoEmbed from '@/components/VideoEmbed'
-import type { Metadata } from 'next'
+import LessonProgress from '@/components/LessonProgress'
 import type { Lesson } from '@/types'
 
-interface PageProps {
-  params: Promise<{ slug: string; lessonSlug: string }>
-}
-
-export async function generateStaticParams() {
-  const courses = await getCourses()
-  const params: { slug: string; lessonSlug: string }[] = []
-  
-  for (const course of courses) {
-    const lessons = course.metadata?.lessons || []
-    for (const lesson of lessons) {
-      params.push({
-        slug: course.slug,
-        lessonSlug: lesson.slug,
-      })
-    }
+// Helper to get difficulty value
+function getDifficultyValue(difficulty: unknown): string {
+  if (!difficulty) return 'beginner'
+  if (typeof difficulty === 'string') return difficulty
+  if (typeof difficulty === 'object' && difficulty !== null && 'value' in difficulty) {
+    return String((difficulty as { value: unknown }).value)
   }
-  
-  return params
+  return 'beginner'
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export default async function LessonPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string; lessonSlug: string }> 
+}) {
   const { slug, lessonSlug } = await params
-  const course = await getCourseBySlug(slug)
   
-  if (!course) {
-    return { title: 'Lesson Not Found - LearnHub' }
-  }
+  const [course, lesson] = await Promise.all([
+    getCourseBySlug(slug),
+    getLessonBySlug(lessonSlug)
+  ])
   
-  const lessons = course.metadata?.lessons || []
-  const lesson = lessons.find((l: Lesson) => l.slug === lessonSlug)
-  
-  if (!lesson) {
-    return { title: 'Lesson Not Found - LearnHub' }
-  }
-  
-  return {
-    title: `${lesson.metadata?.title || lesson.title} - ${course.title} - LearnHub`,
-    description: lesson.metadata?.description || '',
-  }
-}
-
-export default async function LessonPage({ params }: PageProps) {
-  const { slug, lessonSlug } = await params
-  const course = await getCourseBySlug(slug)
-  
-  if (!course) {
+  if (!course || !lesson) {
     notFound()
   }
 
-  const lessons = course.metadata?.lessons || []
-  const sortedLessons = [...lessons].sort((a, b) => {
+  const { metadata } = lesson
+  const courseLessons = course.metadata?.lessons || []
+  
+  // Sort lessons by order
+  const sortedLessons = [...courseLessons].sort((a: Lesson, b: Lesson) => {
     const orderA = a.metadata?.order ?? 999
     const orderB = b.metadata?.order ?? 999
     return orderA - orderB
   })
   
-  const lessonIndex = sortedLessons.findIndex((l) => l.slug === lessonSlug)
-  const lesson = sortedLessons[lessonIndex]
+  // Find current lesson index and adjacent lessons
+  const currentIndex = sortedLessons.findIndex((l: Lesson) => l.slug === lessonSlug)
+  const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null
+  const nextLesson = currentIndex < sortedLessons.length - 1 ? sortedLessons[currentIndex + 1] : null
+
+  // Parse markdown content
+  const content = metadata?.content || ''
   
-  if (!lesson) {
-    notFound()
+  // Simple markdown to HTML conversion
+  const renderMarkdown = (md: string) => {
+    // Convert headers
+    let html = md
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    
+    // Convert bold and italic
+    html = html
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    
+    // Convert inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>')
+    
+    // Convert lists
+    html = html.replace(/^\- (.+)$/gim, '<li>$1</li>')
+    
+    // Wrap consecutive li elements in ul
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    
+    // Convert paragraphs (lines that aren't already wrapped)
+    html = html.replace(/^(?!<[hulo]|```)(.*\S.*)$/gim, '<p>$1</p>')
+    
+    return html
   }
 
-  const prevLesson = lessonIndex > 0 ? sortedLessons[lessonIndex - 1] : null
-  const nextLesson = lessonIndex < sortedLessons.length - 1 ? sortedLessons[lessonIndex + 1] : null
-
   return (
-    <div className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center gap-2 text-sm flex-wrap">
-            <li>
-              <Link href="/" className="text-navy-400 hover:text-primary-400">
-                Home
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li>
-              <Link href="/courses" className="text-navy-400 hover:text-primary-400">
-                Courses
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li>
-              <Link href={`/courses/${course.slug}`} className="text-navy-400 hover:text-primary-400">
-                {course.title}
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li className="text-navy-200">{lesson.metadata?.title || lesson.title}</li>
-          </ol>
-        </nav>
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="bg-navy-900/50 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-2 text-sm text-navy-400">
+            <Link href="/courses" className="hover:text-white transition-colors">
+              Courses
+            </Link>
+            <span>/</span>
+            <Link href={`/courses/${course.slug}`} className="hover:text-white transition-colors">
+              {course.metadata?.title || course.title}
+            </Link>
+            <span>/</span>
+            <span className="text-white">{metadata?.title || lesson.title}</span>
+          </div>
+        </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar - Lesson List */}
-          <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="card p-4 sticky top-24">
-              <h3 className="font-semibold text-white mb-4 px-2">Course Lessons</h3>
-              <nav className="space-y-1">
-                {sortedLessons.map((l, index) => (
+          {/* Sidebar - Course Navigation */}
+          <div className="lg:col-span-1">
+            <div className="card p-4 sticky top-8">
+              <h3 className="text-lg font-semibold text-white mb-4">Course Content</h3>
+              <div className="space-y-2">
+                {sortedLessons.map((l: Lesson, index: number) => (
                   <Link
                     key={l.id}
                     href={`/courses/${course.slug}/lessons/${l.slug}`}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                    className={`block p-3 rounded-lg transition-colors ${
                       l.slug === lessonSlug
-                        ? 'bg-primary-500/20 text-primary-400'
-                        : 'text-navy-300 hover:bg-navy-800 hover:text-white'
+                        ? 'bg-primary-500/20 border border-primary-500/30'
+                        : 'hover:bg-navy-800'
                     }`}
                   >
-                    <span className="w-6 h-6 rounded-full bg-navy-700 flex items-center justify-center text-xs flex-shrink-0">
-                      {index + 1}
-                    </span>
-                    <span className="line-clamp-2">{l.metadata?.title || l.title}</span>
+                    <div className="flex items-start gap-3">
+                      <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                        l.slug === lessonSlug
+                          ? 'bg-primary-500 text-white'
+                          : 'bg-navy-700 text-navy-300'
+                      }`}>
+                        {index + 1}
+                      </span>
+                      <div>
+                        <div className={`text-sm font-medium ${
+                          l.slug === lessonSlug ? 'text-white' : 'text-navy-300'
+                        }`}>
+                          {l.metadata?.title || l.title}
+                        </div>
+                        {l.metadata?.duration_minutes && (
+                          <div className="text-xs text-navy-500 mt-1">
+                            {l.metadata.duration_minutes} min
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </Link>
                 ))}
-              </nav>
+              </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3 order-1 lg:order-2">
+          <div className="lg:col-span-3">
             {/* Lesson Header */}
             <div className="mb-8">
-              <div className="text-sm text-navy-400 mb-2">
-                Lesson {lessonIndex + 1} of {sortedLessons.length}
+              <div className="flex items-center gap-4 mb-4">
+                <span className="badge badge-beginner">
+                  Lesson {currentIndex + 1}
+                </span>
+                {metadata?.duration_minutes && (
+                  <span className="text-navy-400 text-sm flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {metadata.duration_minutes} minutes
+                  </span>
+                )}
               </div>
               <h1 className="text-3xl font-bold text-white mb-4">
-                {lesson.metadata?.title || lesson.title}
+                {metadata?.title || lesson.title}
               </h1>
-              {lesson.metadata?.description && (
-                <p className="text-lg text-navy-300">{lesson.metadata.description}</p>
-              )}
-              
-              {lesson.metadata?.duration_minutes && (
-                <div className="mt-4 flex items-center gap-2 text-navy-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {lesson.metadata.duration_minutes} minutes
-                </div>
+              {metadata?.description && (
+                <p className="text-lg text-navy-300">
+                  {metadata.description}
+                </p>
               )}
             </div>
 
-            {/* Video */}
-            {lesson.metadata?.video_url && (
-              <div className="mb-8">
-                <VideoEmbed url={lesson.metadata.video_url} title={lesson.metadata?.title || lesson.title} />
+            {/* Video Player Placeholder */}
+            {metadata?.video_url && (
+              <div className="card p-8 mb-8 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-500/20 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-navy-400 mb-4">Video content available</p>
+                <a 
+                  href={metadata.video_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  Watch Video
+                </a>
               </div>
             )}
 
             {/* Lesson Content */}
-            {lesson.metadata?.content && (
+            {content && (
               <div className="card p-8 mb-8">
-                <div className="prose max-w-none">
-                  <MarkdownContent content={lesson.metadata.content} />
-                </div>
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+                />
               </div>
             )}
 
             {/* Code Example */}
-            {lesson.metadata?.code_example && (
-              <div className="card p-8 mb-8">
+            {metadata?.code_example && (
+              <div className="mb-8">
                 <h2 className="text-xl font-semibold text-white mb-4">Code Example</h2>
-                <CodeBlock code={lesson.metadata.code_example} />
+                <CodeBlock code={metadata.code_example} language="javascript" />
               </div>
             )}
 
+            {/* Lesson Progress Tracker */}
+            <LessonProgress 
+              lessonId={lesson.id} 
+              lessonTitle={metadata?.title || lesson.title}
+              courseSlug={course.slug}
+            />
+
             {/* Navigation */}
-            <div className="flex items-center justify-between pt-8 border-t border-navy-800">
+            <div className="flex items-center justify-between mt-8 pt-8 border-t border-navy-800">
               {prevLesson ? (
-                <Link
+                <Link 
                   href={`/courses/${course.slug}/lessons/${prevLesson.slug}`}
-                  className="btn-secondary"
+                  className="btn-secondary flex items-center gap-2"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                   Previous Lesson
@@ -192,20 +230,25 @@ export default async function LessonPage({ params }: PageProps) {
               ) : (
                 <div />
               )}
-              
               {nextLesson ? (
-                <Link
+                <Link 
                   href={`/courses/${course.slug}/lessons/${nextLesson.slug}`}
-                  className="btn-primary"
+                  className="btn-primary flex items-center gap-2"
                 >
                   Next Lesson
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>
               ) : (
-                <Link href={`/courses/${course.slug}`} className="btn-primary">
-                  Back to Course
+                <Link 
+                  href={`/courses/${course.slug}`}
+                  className="btn-primary flex items-center gap-2"
+                >
+                  Complete Course
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
                 </Link>
               )}
             </div>
