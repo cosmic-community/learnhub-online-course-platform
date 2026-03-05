@@ -34,8 +34,10 @@ export default async function HomePage() {
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
+              <Link href="/quiz" className="btn-secondary text-lg group">
+                <span className="mr-2">🎯</span>
+                Find Your Path
+                <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </Link>
             </div>
           </div>
@@ -55,6 +57,31 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Quiz Promo Banner - NEW */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 via-primary-600/5 to-primary-500/10 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link href="/quiz" className="flex flex-col sm:flex-row items-center justify-between gap-4 group">
+            <div className="flex items-center gap-4">
+              <div className="text-4xl animate-bounce">🎯</div>
+              <div>
+                <h3 className="text-lg font-semibold text-white group-hover:text-primary-400 transition-colors">
+                  Not sure where to start?
+                </h3>
+                <p className="text-navy-400 text-sm">
+                  Take our 1-minute quiz to find your perfect learning path
+                </p>
+              </div>
+            </div>
+            <div className="btn-primary text-sm whitespace-nowrap">
+              Take the Quiz
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </div>
+          </Link>
         </div>
       </section>
 
@@ -127,9 +154,14 @@ export default async function HomePage() {
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+              <Link href="/quiz" className="btn-secondary text-lg">
+                🎯 Find Your Path First
+              </Link>
+            </div>
           </div>
         </div>
       </section>
