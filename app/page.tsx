@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning hours
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +27,13 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Streak Badge Callout */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-navy-800/50 border border-navy-700 rounded-full mb-6 text-sm text-navy-300">
+              <span className="text-lg">🔥</span>
+              <span>Track your daily learning streak!</span>
+              <span className="text-primary-400 font-medium">New</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,16 +53,20 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 bg-navy-900/30 rounded-xl border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
@@ -81,6 +97,42 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Daily Streak Motivation Section */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="card p-8 md:p-12 bg-gradient-to-br from-primary-500/10 to-pink-500/10 border-primary-500/20">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-shrink-0 text-6xl md:text-8xl">
+                🔥
+              </div>
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Build Your Learning Streak
+                </h2>
+                <p className="text-navy-300 mb-4 max-w-xl">
+                  Consistency is the key to mastery. Visit LearnHub daily to maintain your streak, 
+                  unlock achievements, and celebrate milestones with confetti! 🎉
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy-800/50 rounded-full text-sm">
+                    <span>🌱</span> 1 day
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy-800/50 rounded-full text-sm">
+                    <span>🔥</span> 7 days
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy-800/50 rounded-full text-sm">
+                    <span>🏆</span> 30 days
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy-800/50 rounded-full text-sm">
+                    <span>👑</span> 100 days
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
