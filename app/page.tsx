@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((total, course) => {
+    return total + (course.metadata?.lessons?.length ?? 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -41,10 +46,14 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
@@ -53,6 +62,19 @@ export default async function HomePage() {
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Streak Encouragement Banner */}
+      <section className="py-6 bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-primary-500/10 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <span className="text-4xl">🔥</span>
+            <div>
+              <p className="text-white font-semibold text-lg">Build your learning streak!</p>
+              <p className="text-navy-300 text-sm">Visit daily to maintain your streak and unlock achievements</p>
             </div>
           </div>
         </div>
