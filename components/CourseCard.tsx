@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import type { Course } from '@/types'
-import DifficultyBadge from './DifficultyBadge'
+import ProgressRing from './ProgressRing'
 
 interface CourseCardProps {
   course: Course
@@ -8,109 +11,130 @@ interface CourseCardProps {
 
 export default function CourseCard({ course }: CourseCardProps) {
   const { metadata } = course
-  const thumbnail = metadata?.thumbnail
-  const instructors = metadata?.instructors || []
-  const categories = metadata?.categories || []
-  const lessons = metadata?.lessons || []
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    // Calculate progress from localStorage
+    const courseProgress = localStorage.getItem(`course-progress-${course.slug}`)
+    if (courseProgress && metadata?.lessons) {
+      const completed = JSON.parse(courseProgress)
+      const completedCount = Object.values(completed).filter(Boolean).length
+      const totalLessons = metadata.lessons.length
+      setProgress(totalLessons > 0 ? (completedCount / totalLessons) * 100 : 0)
+    }
+  }, [course.slug, metadata?.lessons])
+
+  // Get difficulty value safely
+  const getDifficultyValue = (): string => {
+    if (!metadata?.difficulty) return 'beginner'
+    if (typeof metadata.difficulty === 'string') return metadata.difficulty.toLowerCase()
+    if (typeof metadata.difficulty === 'object' && metadata.difficulty !== null) {
+      const diffObj = metadata.difficulty as { value?: string; key?: string }
+      return (diffObj.value || diffObj.key || 'beginner').toLowerCase()
+    }
+    return 'beginner'
+  }
+
+  const difficultyValue = getDifficultyValue()
+
+  const getDifficultyBadge = () => {
+    const badges: Record<string, string> = {
+      beginner: 'badge-beginner',
+      intermediate: 'badge-intermediate', 
+      advanced: 'badge-advanced',
+    }
+    return badges[difficultyValue] || 'badge-beginner'
+  }
+
+  const formatDifficulty = () => {
+    return difficultyValue.charAt(0).toUpperCase() + difficultyValue.slice(1)
+  }
 
   return (
-    <Link href={`/courses/${course.slug}`} className="card group block">
+    <Link href={`/courses/${course.slug}`} className="card group block relative overflow-hidden">
+      {/* Progress indicator */}
+      {progress > 0 && (
+        <div className="absolute top-4 right-4 z-10">
+          <ProgressRing progress={progress} size={40} strokeWidth={3} />
+        </div>
+      )}
+      
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden">
-        {thumbnail ? (
+      <div className="relative h-48 overflow-hidden">
+        {metadata?.thumbnail?.imgix_url ? (
           <img
-            src={`${thumbnail.imgix_url}?w=800&h=450&fit=crop&auto=format,compress`}
-            alt={course.title}
-            width={400}
-            height={225}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            src={`${metadata.thumbnail.imgix_url}?w=800&h=400&fit=crop&auto=format,compress`}
+            alt={metadata.title || course.title}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-navy-700 to-navy-800 flex items-center justify-center">
-            <span className="text-5xl">📚</span>
+          <div className="w-full h-full bg-gradient-to-br from-primary-500/20 to-navy-800 flex items-center justify-center">
+            <span className="text-4xl">📚</span>
           </div>
         )}
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent opacity-60" />
         
-        {/* Price Badge */}
-        <div className="absolute top-4 right-4">
-          {metadata?.is_free ? (
+        {/* Badges */}
+        <div className="absolute bottom-4 left-4 flex gap-2">
+          <span className={`badge ${getDifficultyBadge()}`}>
+            {formatDifficulty()}
+          </span>
+          {metadata?.is_free && (
             <span className="badge badge-free">Free</span>
-          ) : (
-            <span className="badge bg-navy-900/90 text-white">
-              ${metadata?.price || 0}
-            </span>
           )}
         </div>
       </div>
 
       {/* Content */}
       <div className="p-6">
-        {/* Categories */}
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {categories.slice(0, 2).map((category) => (
-              <span
-                key={category.id}
-                className="text-xs text-navy-400"
-              >
-                {category.metadata?.icon} {category.metadata?.name || category.title}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors line-clamp-2">
-          {course.title}
+        <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors line-clamp-2">
+          {metadata?.title || course.title}
         </h3>
-
+        
         {metadata?.tagline && (
-          <p className="text-navy-400 text-sm mb-4 line-clamp-2">
-            {metadata.tagline}
-          </p>
+          <p className="text-navy-400 text-sm mb-4 line-clamp-2">{metadata.tagline}</p>
         )}
 
-        {/* Meta Info */}
-        <div className="flex items-center gap-4 text-sm text-navy-400">
-          {metadata?.difficulty && (
-            <DifficultyBadge difficulty={metadata.difficulty} size="small" />
-          )}
+        {/* Meta info */}
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-4 text-navy-400">
+            {metadata?.estimated_hours && (
+              <span className="flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {metadata.estimated_hours}h
+              </span>
+            )}
+            {metadata?.lessons && metadata.lessons.length > 0 && (
+              <span className="flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                {metadata.lessons.length} lessons
+              </span>
+            )}
+          </div>
           
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            {lessons.length} lessons
-          </span>
-          
-          {metadata?.estimated_hours && (
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {metadata.estimated_hours}h
-            </span>
+          {!metadata?.is_free && metadata?.price && (
+            <span className="text-primary-400 font-semibold">${metadata.price}</span>
           )}
         </div>
 
-        {/* Instructor */}
-        {instructors.length > 0 && instructors[0] && (
-          <div className="mt-4 pt-4 border-t border-navy-800 flex items-center gap-3">
-            {instructors[0].metadata?.photo ? (
-              <img
-                src={`${instructors[0].metadata.photo.imgix_url}?w=64&h=64&fit=crop&auto=format,compress`}
-                alt={instructors[0].metadata?.name || instructors[0].title}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full object-cover"
+        {/* Progress bar at bottom */}
+        {progress > 0 && (
+          <div className="mt-4 pt-4 border-t border-navy-700">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-navy-400">Progress</span>
+              <span className="text-primary-400 font-medium">{Math.round(progress)}%</span>
+            </div>
+            <div className="h-1.5 bg-navy-700 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-500"
+                style={{ width: `${progress}%` }}
               />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center text-sm">
-                👨‍🏫
-              </div>
-            )}
-            <span className="text-sm text-navy-300">
-              {instructors[0].metadata?.name || instructors[0].title}
-            </span>
+            </div>
           </div>
         )}
       </div>
