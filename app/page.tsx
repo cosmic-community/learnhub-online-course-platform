@@ -13,6 +13,18 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    const lessonCount = course.metadata?.lessons?.length || 0
+    return acc + lessonCount
+  }, 0)
+
+  // Calculate total hours
+  const totalHours = courses.reduce((acc, course) => {
+    const hours = course.metadata?.estimated_hours || 0
+    return acc + hours
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +34,10 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-1.5 mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span className="text-primary-400 text-sm font-medium">New: Track your learning streak!</span>
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -41,18 +57,22 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
         </div>
@@ -112,6 +132,34 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {instructors.map((instructor) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Streak Motivation Section */}
+      <section className="py-16 bg-gradient-to-r from-orange-500/10 via-red-500/10 to-primary-500/10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-4xl mb-4">🔥</div>
+          <h2 className="text-2xl font-bold text-white mb-3">Build Your Learning Streak</h2>
+          <p className="text-navy-300 mb-6">
+            Visit daily to maintain your streak and unlock achievements. 
+            Consistent learners are 3x more likely to complete courses!
+          </p>
+          <div className="inline-flex flex-wrap justify-center gap-3">
+            {[
+              { days: 3, emoji: '🌱', name: 'Seedling' },
+              { days: 7, emoji: '🔥', name: 'On Fire' },
+              { days: 30, emoji: '🏆', name: 'Champion' },
+              { days: 100, emoji: '🚀', name: 'Legend' },
+            ].map((milestone) => (
+              <div 
+                key={milestone.days}
+                className="flex items-center gap-2 px-3 py-1.5 bg-navy-900/50 border border-navy-700 rounded-full text-sm"
+              >
+                <span>{milestone.emoji}</span>
+                <span className="text-navy-300">{milestone.days} days</span>
+              </div>
             ))}
           </div>
         </div>

@@ -105,3 +105,33 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Streak animations */
+@keyframes streak-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.6), 0 0 30px rgba(249, 115, 22, 0.3);
+  }
+}
+
+.streak-glow {
+  animation: streak-glow 2s ease-in-out infinite;
+}
+
+/* Celebration particles */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-float-up {
+  animation: float-up 1.5s ease-out forwards;
+}
