@@ -3,6 +3,8 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import LearningProgress from '@/components/LearningProgress'
+import StreakBanner from '@/components/StreakBanner'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -26,10 +28,12 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col">
         <Header />
+        <StreakBanner />
         <main className="flex-1">
           {children}
         </main>
         <Footer />
+        <LearningProgress />
         <CosmicBadge bucketSlug={bucketSlug} />
       </body>
     </html>
