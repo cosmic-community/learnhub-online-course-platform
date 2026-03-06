@@ -3,6 +3,8 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
+import QuickStats from '@/components/QuickStats'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -40,19 +42,67 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
-              <div className="text-navy-400 text-sm">Courses</div>
+          {/* Animated Stats */}
+          <QuickStats 
+            totalCourses={courses.length}
+            totalInstructors={instructors.length}
+            totalCategories={categories.length}
+          />
+        </div>
+      </section>
+
+      {/* Learning Streak Section - NEW! */}
+      <section className="py-12 bg-navy-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md mx-auto lg:max-w-none lg:grid lg:grid-cols-3 lg:gap-8 lg:items-start">
+            <div className="lg:col-span-1">
+              <LearningStreak />
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="mt-8 lg:mt-0 lg:col-span-2">
+              <div className="card p-6">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <span className="text-2xl">💡</span>
+                  Why Build a Learning Streak?
+                </h3>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">🧠</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-white">Better Retention</h4>
+                      <p className="text-sm text-navy-400">Daily practice improves memory and skill retention by up to 80%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">🎯</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-white">Build Habits</h4>
+                      <p className="text-sm text-navy-400">Consistency turns learning into an automatic daily habit</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">📈</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-white">Track Progress</h4>
+                      <p className="text-sm text-navy-400">Visualize your growth and celebrate milestones</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">🏆</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-white">Stay Motivated</h4>
+                      <p className="text-sm text-navy-400">Gamification keeps you engaged and excited to learn</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
