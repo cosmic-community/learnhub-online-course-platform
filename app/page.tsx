@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStreak from '@/components/LearningStreak'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,16 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
+  // Calculate total learning hours
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
 
   return (
     <div>
@@ -40,23 +51,30 @@ export default async function HomePage() {
             </div>
           </div>
           
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          {/* Enhanced Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm rounded-xl p-4 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm rounded-xl p-4 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm rounded-xl p-4 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm rounded-xl p-4 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Learning Streak & Motivation Section */}
+      <LearningStreak />
 
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
@@ -81,6 +99,44 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Path Suggestion */}
+      <section className="py-16 bg-gradient-to-r from-primary-500/5 via-purple-500/5 to-pink-500/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-navy-900/50 backdrop-blur-sm border border-navy-800 rounded-2xl p-8 md:p-12">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <span className="inline-block px-3 py-1 bg-primary-500/20 text-primary-400 rounded-full text-sm font-medium mb-4">
+                  🎯 Recommended for You
+                </span>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  Not sure where to start?
+                </h3>
+                <p className="text-navy-300 mb-6">
+                  Take our quick assessment to get personalized course recommendations 
+                  based on your goals and experience level.
+                </p>
+                <Link href="/categories" className="btn-primary">
+                  Explore Learning Paths
+                </Link>
+              </div>
+              <div className="flex justify-center">
+                <div className="grid grid-cols-3 gap-3">
+                  {['💻', '📱', '☁️', '🎨', '🔐', '📊'].map((emoji, i) => (
+                    <div
+                      key={i}
+                      className="w-16 h-16 bg-navy-800/50 rounded-xl flex items-center justify-center text-2xl hover:scale-110 transition-transform cursor-pointer"
+                      style={{ animationDelay: `${i * 100}ms` }}
+                    >
+                      {emoji}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -121,15 +177,21 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-6">🚀</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
             </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/courses" className="btn-primary text-lg">
+                Get Started Now
+              </Link>
+              <Link href="/contact" className="btn-secondary text-lg">
+                Have Questions?
+              </Link>
+            </div>
           </div>
         </div>
       </section>
