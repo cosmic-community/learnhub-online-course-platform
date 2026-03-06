@@ -58,6 +58,19 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* New Feature Highlight */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-transparent border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-3 text-center">
+            <span className="text-2xl">🎉</span>
+            <p className="text-navy-200">
+              <span className="text-primary-400 font-semibold">New!</span> Track your learning progress and earn celebrations when you complete courses!
+            </p>
+            <span className="text-2xl">✨</span>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
