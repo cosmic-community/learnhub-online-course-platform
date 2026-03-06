@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -20,8 +25,17 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 text-4xl animate-float opacity-20">📚</div>
+        <div className="absolute top-40 right-20 text-3xl animate-float opacity-20" style={{ animationDelay: '1s' }}>💻</div>
+        <div className="absolute bottom-20 left-1/4 text-3xl animate-float opacity-20" style={{ animationDelay: '2s' }}>🎯</div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <span className="animate-pulse">🔴</span>
+              Now with interactive progress tracking!
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,8 +45,11 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
+              <Link href="/courses" className="btn-primary text-lg group">
                 Browse Courses
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
@@ -41,16 +58,20 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-2xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
@@ -113,6 +134,27 @@ export default async function HomePage() {
             {instructors.map((instructor) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Feature Highlight */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="card p-8 bg-gradient-to-br from-primary-900/50 to-purple-900/50 border-primary-700/50">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="text-6xl animate-float">🎯</div>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold text-white mb-2">Track Your Learning Journey</h3>
+                <p className="text-navy-300 mb-4">
+                  Our new progress tracker celebrates your achievements as you explore courses. 
+                  Build streaks, hit milestones, and watch confetti fly! 🎉
+                </p>
+                <p className="text-sm text-navy-400">
+                  Look for the progress button in the bottom-left corner →
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
