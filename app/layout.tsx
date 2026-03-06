@@ -3,6 +3,8 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import LearningProgressWidget from '@/components/LearningProgressWidget'
+import { getCourses, getLessons } from '@/lib/cosmic'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -12,12 +14,23 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string
+  
+  // Fetch stats for the progress widget
+  const [courses, lessons] = await Promise.all([
+    getCourses(),
+    getLessons()
+  ])
+  
+  // Calculate total learning minutes from lessons
+  const totalMinutes = lessons.reduce((sum, lesson) => {
+    return sum + (lesson.metadata?.duration_minutes || 0)
+  }, 0)
   
   return (
     <html lang="en">
@@ -30,6 +43,11 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <LearningProgressWidget 
+          totalCourses={courses.length}
+          totalLessons={lessons.length}
+          totalMinutes={totalMinutes}
+        />
         <CosmicBadge bucketSlug={bucketSlug} />
       </body>
     </html>

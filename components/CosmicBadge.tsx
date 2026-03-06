@@ -29,7 +29,7 @@ export default function CosmicBadge({ bucketSlug }: CosmicBadgeProps) {
       href={`https://www.cosmicjs.com?utm_source=bucket_${bucketSlug}&utm_medium=referral&utm_campaign=app_badge&utm_content=built_with_cosmic`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 flex items-center gap-2 text-white text-sm font-medium no-underline transition-colors duration-200 z-50"
+      className="fixed bottom-5 right-5 flex items-center gap-2 text-white text-sm font-medium no-underline transition-colors duration-200 z-30"
       style={{
         position: 'fixed',
         backgroundColor: '#11171A',
