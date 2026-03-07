@@ -1,10 +1,11 @@
 // app/courses/[slug]/page.tsx
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { getCourseBySlug, getCourses } from '@/lib/cosmic'
+import { getMetafieldValue } from '@/lib/cosmic'
+import LessonCard from '@/components/LessonCard'
 import MarkdownContent from '@/components/MarkdownContent'
-import DifficultyBadge from '@/components/DifficultyBadge'
-import LessonList from '@/components/LessonList'
+import CourseViewTracker from '@/components/CourseViewTracker'
 import type { Metadata } from 'next'
 
 interface PageProps {
@@ -23,57 +24,63 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const course = await getCourseBySlug(slug)
   
   if (!course) {
-    return { title: 'Course Not Found - LearnHub' }
+    return { title: 'Course Not Found' }
   }
-  
+
   return {
-    title: course.metadata?.seo_title || `${course.title} - LearnHub`,
-    description: course.metadata?.seo_description || course.metadata?.tagline || '',
+    title: `${course.metadata?.seo_title || course.metadata?.title || course.title} - LearnHub`,
+    description: course.metadata?.seo_description || course.metadata?.tagline || undefined,
   }
 }
 
 export default async function CoursePage({ params }: PageProps) {
   const { slug } = await params
   const course = await getCourseBySlug(slug)
-  
+
   if (!course) {
     notFound()
   }
 
   const { metadata } = course
-  const thumbnail = metadata?.thumbnail
+  const lessons = metadata?.lessons || []
   const instructors = metadata?.instructors || []
   const categories = metadata?.categories || []
-  const lessons = metadata?.lessons || []
+  const difficulty = getMetafieldValue(metadata?.difficulty)
+
+  // Sort lessons by order
   const sortedLessons = [...lessons].sort((a, b) => {
     const orderA = a.metadata?.order ?? 999
     const orderB = b.metadata?.order ?? 999
     return orderA - orderB
   })
 
-  const totalDuration = lessons.reduce((acc, lesson) => {
-    return acc + (lesson.metadata?.duration_minutes || 0)
+  const totalDuration = sortedLessons.reduce((sum, lesson) => {
+    return sum + (lesson.metadata?.duration_minutes || 0)
   }, 0)
+
+  const difficultyColors: Record<string, string> = {
+    beginner: 'badge-beginner',
+    intermediate: 'badge-intermediate',
+    advanced: 'badge-advanced',
+    Beginner: 'badge-beginner',
+    Intermediate: 'badge-intermediate',
+    Advanced: 'badge-advanced',
+  }
 
   return (
     <div className="py-12">
+      {/* Track course view */}
+      <CourseViewTracker courseSlug={slug} />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-8">
-          <ol className="flex items-center gap-2 text-sm">
-            <li>
-              <Link href="/" className="text-navy-400 hover:text-primary-400">
-                Home
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li>
-              <Link href="/courses" className="text-navy-400 hover:text-primary-400">
-                Courses
-              </Link>
-            </li>
-            <li className="text-navy-600">/</li>
-            <li className="text-navy-200">{course.title}</li>
+          <ol className="flex items-center gap-2 text-sm text-navy-400">
+            <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
+            <li>/</li>
+            <li><Link href="/courses" className="hover:text-white transition-colors">Courses</Link></li>
+            <li>/</li>
+            <li className="text-white">{metadata?.title || course.title}</li>
           </ol>
         </nav>
 
@@ -82,59 +89,62 @@ export default async function CoursePage({ params }: PageProps) {
           <div className="lg:col-span-2">
             {/* Course Header */}
             <div className="mb-8">
-              {/* Categories */}
-              {categories.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {categories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/categories/${category.slug}`}
-                      className="badge bg-navy-800 text-navy-200 hover:bg-navy-700 transition-colors"
-                    >
-                      {category.metadata?.icon} {category.metadata?.name || category.title}
-                    </Link>
-                  ))}
-                </div>
-              )}
-              
-              <h1 className="text-4xl font-bold text-white mb-4">{course.title}</h1>
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                {difficulty && (
+                  <span className={`badge ${difficultyColors[difficulty] || 'bg-navy-700 text-navy-200'}`}>
+                    {difficulty}
+                  </span>
+                )}
+                {metadata?.is_free && (
+                  <span className="badge badge-free">Free</span>
+                )}
+                {categories.length > 0 && categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/categories/${cat.slug}`}
+                    className="badge bg-navy-700 text-navy-200 hover:bg-navy-600 transition-colors"
+                  >
+                    {cat.metadata?.icon} {cat.metadata?.name || cat.title}
+                  </Link>
+                ))}
+              </div>
+
+              <h1 className="text-4xl font-bold text-white mb-4">
+                {metadata?.title || course.title}
+              </h1>
               
               {metadata?.tagline && (
                 <p className="text-xl text-navy-300 mb-6">{metadata.tagline}</p>
               )}
 
-              <div className="flex flex-wrap items-center gap-4">
-                {metadata?.difficulty && (
-                  <DifficultyBadge difficulty={metadata.difficulty} />
+              {/* Course Meta */}
+              <div className="flex flex-wrap items-center gap-6 text-navy-400">
+                <div className="flex items-center gap-2">
+                  <span>📖</span>
+                  <span>{sortedLessons.length} lessons</span>
+                </div>
+                {totalDuration > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span>⏱️</span>
+                    <span>{Math.round(totalDuration / 60 * 10) / 10}h total</span>
+                  </div>
                 )}
-                
                 {metadata?.estimated_hours && (
-                  <span className="text-navy-400 flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {metadata.estimated_hours} hours
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span>📅</span>
+                    <span>~{metadata.estimated_hours}h to complete</span>
+                  </div>
                 )}
-                
-                <span className="text-navy-400 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  {lessons.length} lessons
-                </span>
               </div>
             </div>
 
-            {/* Thumbnail */}
-            {thumbnail && (
+            {/* Course Thumbnail */}
+            {metadata?.thumbnail && (
               <div className="mb-8 rounded-2xl overflow-hidden">
                 <img
-                  src={`${thumbnail.imgix_url}?w=1600&h=900&fit=crop&auto=format,compress`}
-                  alt={course.title}
-                  width={800}
-                  height={450}
-                  className="w-full h-auto"
+                  src={`${metadata.thumbnail.imgix_url}?w=1200&h=600&fit=crop&auto=format,compress`}
+                  alt={metadata.title || course.title}
+                  className="w-full object-cover"
                 />
               </div>
             )}
@@ -154,52 +164,66 @@ export default async function CoursePage({ params }: PageProps) {
               <div className="card p-8">
                 <h2 className="text-2xl font-bold text-white mb-6">
                   Course Content
-                  <span className="text-base font-normal text-navy-400 ml-3">
-                    {lessons.length} lessons • {totalDuration} min total
+                  <span className="text-lg font-normal text-navy-400 ml-2">
+                    ({sortedLessons.length} lessons)
                   </span>
                 </h2>
-                <LessonList lessons={sortedLessons} courseSlug={course.slug} />
+                <div className="space-y-4">
+                  {sortedLessons.map((lesson, index) => (
+                    <LessonCard
+                      key={lesson.id}
+                      lesson={lesson}
+                      courseSlug={course.slug}
+                      index={index + 1}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              {/* Pricing Card */}
-              <div className="card p-6 mb-6">
-                <div className="mb-6">
+            <div className="sticky top-8 space-y-6">
+              {/* Price Card */}
+              <div className="card p-6">
+                <div className="text-center mb-6">
                   {metadata?.is_free ? (
                     <div className="text-3xl font-bold text-primary-400">Free</div>
+                  ) : metadata?.price ? (
+                    <div className="text-3xl font-bold text-white">${metadata.price}</div>
                   ) : (
-                    <div className="text-3xl font-bold text-white">
-                      ${metadata?.price || 0}
-                    </div>
+                    <div className="text-3xl font-bold text-primary-400">Free</div>
                   )}
                 </div>
-                
-                <button className="btn-primary w-full mb-4">
-                  {metadata?.is_free ? 'Start Learning' : 'Enroll Now'}
-                </button>
-                
+
+                {sortedLessons.length > 0 && sortedLessons[0] && (
+                  <Link
+                    href={`/courses/${course.slug}/lessons/${sortedLessons[0].slug}`}
+                    className="btn-primary w-full mb-4"
+                  >
+                    Start Learning
+                  </Link>
+                )}
+
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-center gap-3 text-navy-300">
-                    <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Full lifetime access
+                  <div className="flex items-center justify-between text-navy-300">
+                    <span>Lessons</span>
+                    <span className="text-white">{sortedLessons.length}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-navy-300">
-                    <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Access on mobile and desktop
+                  {totalDuration > 0 && (
+                    <div className="flex items-center justify-between text-navy-300">
+                      <span>Total Duration</span>
+                      <span className="text-white">{Math.round(totalDuration / 60 * 10) / 10} hours</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-navy-300">
+                    <span>Level</span>
+                    <span className="text-white capitalize">{difficulty || 'All levels'}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-navy-300">
-                    <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Certificate of completion
+                  <div className="flex items-center justify-between text-navy-300">
+                    <span>Access</span>
+                    <span className="text-white">Lifetime</span>
                   </div>
                 </div>
               </div>
@@ -220,18 +244,16 @@ export default async function CoursePage({ params }: PageProps) {
                         {instructor.metadata?.photo ? (
                           <img
                             src={`${instructor.metadata.photo.imgix_url}?w=96&h=96&fit=crop&auto=format,compress`}
-                            alt={instructor.metadata?.name || instructor.title}
-                            width={48}
-                            height={48}
+                            alt={instructor.metadata.name || instructor.title}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-12 h-12 rounded-full bg-navy-700 flex items-center justify-center">
-                            <span className="text-xl">👨‍🏫</span>
+                          <div className="w-12 h-12 rounded-full bg-navy-700 flex items-center justify-center text-lg">
+                            👤
                           </div>
                         )}
                         <div>
-                          <div className="text-white font-medium group-hover:text-primary-400 transition-colors">
+                          <div className="font-medium text-white group-hover:text-primary-400 transition-colors">
                             {instructor.metadata?.name || instructor.title}
                           </div>
                           {instructor.metadata?.credentials && (
