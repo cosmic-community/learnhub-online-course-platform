@@ -58,6 +58,19 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Welcome Banner for Learning Journey */}
+      <section className="py-8 bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 border-y border-primary-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="text-4xl animate-bounce">🎯</div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Track Your Learning Journey</h3>
+              <p className="text-navy-300 text-sm">Explore courses and watch your progress grow! Hit milestones for surprise celebrations 🎉</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
       <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
