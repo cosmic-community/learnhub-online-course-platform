@@ -16,7 +16,7 @@ export default function CategoryCard({ category, size = 'default' }: CategoryCar
         size === 'large' ? 'p-8' : 'p-6'
       }`}
     >
-      <div className={`mb-4 ${size === 'large' ? 'text-6xl' : 'text-4xl'}`}>
+      <div className={`mb-4 ${size === 'large' ? 'text-6xl' : 'text-4xl'} transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
         {metadata?.icon || '📂'}
       </div>
       <h3 className={`font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors ${
@@ -29,6 +29,15 @@ export default function CategoryCard({ category, size = 'default' }: CategoryCar
           {metadata.description}
         </p>
       )}
+      
+      {/* Hover arrow indicator */}
+      <div className="mt-4 flex justify-center">
+        <span className="text-primary-400 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      </div>
     </Link>
   )
 }
