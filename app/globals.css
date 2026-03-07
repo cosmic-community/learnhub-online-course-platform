@@ -105,3 +105,55 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Confetti Animation */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  will-change: transform, opacity;
+}
+
+/* Achievement Toast Animation */
+@keyframes bounce-in {
+  0% {
+    transform: translateX(-50%) scale(0.5) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05) translateY(0);
+  }
+  70% {
+    transform: translateX(-50%) scale(0.95);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s ease-out forwards;
+}
+
+/* Streak Widget Pulse */
+@keyframes gentle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+}
+
+.streak-pulse {
+  animation: gentle-pulse 2s infinite;
+}
