@@ -13,6 +13,13 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning minutes across all courses
+  const totalMinutes = courses.reduce((acc, course) => {
+    const hours = course.metadata?.estimated_hours ?? 0
+    return acc + (hours * 60)
+  }, 0)
+  const totalHours = Math.floor(totalMinutes / 60)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,6 +29,13 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+              </span>
+              {totalHours}+ hours of learning content
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -82,6 +96,21 @@ export default async function HomePage() {
               View All Courses
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Streak Motivation Banner */}
+      <section className="py-12 bg-gradient-to-r from-orange-500/10 via-primary-500/10 to-orange-500/10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className="text-4xl animate-bounce">🔥</span>
+            <h2 className="text-2xl font-bold text-white">Build Your Learning Streak</h2>
+            <span className="text-4xl animate-bounce" style={{ animationDelay: '0.1s' }}>🔥</span>
+          </div>
+          <p className="text-navy-300 max-w-xl mx-auto">
+            Visit LearnHub daily to build your streak! Reach milestones at 7, 30, and 100 days 
+            to unlock special celebrations. Your streak is shown in the header.
+          </p>
         </div>
       </section>
 
