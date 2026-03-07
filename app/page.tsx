@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathSelector from '@/components/LearningPathSelector'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,25 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+
+  // Group courses by difficulty for the learning path feature
+  const coursesByDifficulty = {
+    beginner: courses.filter(c => {
+      const difficulty = c.metadata?.difficulty
+      const value = typeof difficulty === 'object' && difficulty !== null ? difficulty.value : difficulty
+      return value === 'Beginner' || value === 'beginner'
+    }),
+    intermediate: courses.filter(c => {
+      const difficulty = c.metadata?.difficulty
+      const value = typeof difficulty === 'object' && difficulty !== null ? difficulty.value : difficulty
+      return value === 'Intermediate' || value === 'intermediate'
+    }),
+    advanced: courses.filter(c => {
+      const difficulty = c.metadata?.difficulty
+      const value = typeof difficulty === 'object' && difficulty !== null ? difficulty.value : difficulty
+      return value === 'Advanced' || value === 'advanced'
+    }),
+  }
 
   return (
     <div>
@@ -55,6 +75,29 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* NEW: Learning Path Recommendation Section */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950 via-navy-900/50 to-navy-950" />
+        <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-primary-500/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-1 bg-primary-500/10 text-primary-400 text-sm font-medium rounded-full mb-4">
+              ✨ Personalized For You
+            </span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              Discover Your Learning Path
+            </h2>
+            <p className="text-navy-300 text-lg max-w-2xl mx-auto">
+              Tell us your skill level and we&apos;ll recommend the perfect courses to accelerate your growth
+            </p>
+          </div>
+          
+          <LearningPathSelector coursesByDifficulty={coursesByDifficulty} />
         </div>
       </section>
 
