@@ -3,6 +3,9 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathQuiz from '@/components/LearningPathQuiz'
+import DailyMotivation from '@/components/DailyMotivation'
+import StreakCounter from '@/components/StreakCounter'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -13,6 +16,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lessons across all courses
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -21,6 +29,11 @@ export default async function HomePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          {/* Streak Counter - Top Right */}
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
+            <StreakCounter />
+          </div>
+
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
@@ -41,16 +54,20 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
@@ -58,8 +75,31 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Daily Motivation + Learning Path Quiz Section */}
+      <section className="py-16 bg-navy-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Daily Motivation */}
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <span>✨</span> Daily Inspiration
+              </h2>
+              <DailyMotivation />
+            </div>
+            
+            {/* Learning Path Quiz */}
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <span>🎯</span> Personalized For You
+              </h2>
+              <LearningPathQuiz courses={courses} categories={categories} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Courses */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -86,7 +126,7 @@ export default async function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Browse by Category</h2>
@@ -102,7 +142,7 @@ export default async function HomePage() {
       </section>
 
       {/* Instructors */}
-      <section className="py-20 bg-navy-900/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-2">Meet Our Instructors</h2>
@@ -118,7 +158,7 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-navy-900/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
             <h2 className="text-3xl font-bold text-white mb-4">
