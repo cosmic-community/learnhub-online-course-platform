@@ -48,6 +48,137 @@
   }
 }
 
+/* Animation keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(10px, -20px) scale(1.1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-5px, -40px) scale(0.9);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translate(15px, -20px) scale(1.05);
+    opacity: 0.4;
+  }
+}
+
+@keyframes celebration {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Floating particles for hero section */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.particle-1 {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.1));
+  top: 20%;
+  left: 15%;
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+.particle-2 {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0.1));
+  top: 60%;
+  right: 20%;
+  animation: particle-float 6s ease-in-out infinite 1s;
+}
+
+.particle-3 {
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.1));
+  bottom: 30%;
+  left: 25%;
+  animation: particle-float 7s ease-in-out infinite 0.5s;
+}
+
+/* CTA Card celebration effect */
+.cta-card {
+  position: relative;
+}
+
+.cta-card .celebration-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cta-card:hover .celebration-particles::before,
+.cta-card:hover .celebration-particles::after {
+  content: '✨';
+  position: absolute;
+  font-size: 1.5rem;
+  animation: celebration 1s ease-out forwards;
+}
+
+.cta-card:hover .celebration-particles::before {
+  left: 20%;
+  bottom: 0;
+  animation-delay: 0s;
+}
+
+.cta-card:hover .celebration-particles::after {
+  right: 20%;
+  bottom: 0;
+  animation-delay: 0.15s;
+}
+
+/* Tabular numbers for counters */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-navy-200 leading-relaxed;
