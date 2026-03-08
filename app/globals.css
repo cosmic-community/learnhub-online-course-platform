@@ -105,3 +105,37 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Learning Streak Animations */
+@keyframes streak-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(139, 92, 246, 0.3), 0 0 10px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 0 25px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.streak-glow {
+  animation: streak-glow 2s ease-in-out infinite;
+}
+
+/* Smooth hover transitions */
+@layer utilities {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+}
+
+/* Custom scrollbar for streak dropdown */
+.streak-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.streak-dropdown::-webkit-scrollbar-track {
+  @apply bg-navy-800 rounded;
+}
+
+.streak-dropdown::-webkit-scrollbar-thumb {
+  @apply bg-navy-600 rounded hover:bg-navy-500;
+}
