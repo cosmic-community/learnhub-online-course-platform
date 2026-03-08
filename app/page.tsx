@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningPathQuiz from '@/components/LearningPathQuiz'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -34,8 +35,8 @@ export default async function HomePage() {
               <Link href="/courses" className="btn-primary text-lg">
                 Browse Courses
               </Link>
-              <Link href="/categories" className="btn-secondary text-lg">
-                Explore Categories
+              <Link href="#quiz" className="btn-secondary text-lg">
+                🎯 Find My Path
               </Link>
             </div>
           </div>
@@ -55,6 +56,21 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Learning Path Quiz - NEW! */}
+      <section id="quiz" className="py-20 scroll-mt-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-2 bg-primary-500/10 text-primary-400 rounded-full text-sm font-medium mb-4">
+              ✨ New Feature
+            </span>
+            <h2 className="text-3xl font-bold text-white mb-2">Discover Your Learning Path</h2>
+            <p className="text-navy-400">Answer a few quick questions and we&apos;ll recommend the perfect courses for you</p>
+          </div>
+          
+          <LearningPathQuiz courses={courses} categories={categories} />
         </div>
       </section>
 
