@@ -13,6 +13,11 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total lesson hours
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -20,8 +25,25 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-navy-950" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/5 rounded-full blur-3xl" />
         
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-primary-400/30 rounded-full animate-pulse" />
+          <div className="absolute top-40 right-20 w-3 h-3 bg-primary-500/20 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
+          <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-primary-300/30 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-60 right-1/3 w-4 h-4 bg-primary-400/10 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }} />
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Welcome badge */}
+            <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+              </span>
+              <span className="text-primary-300 text-sm font-medium">New courses added weekly</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
@@ -31,8 +53,9 @@ export default async function HomePage() {
               Start your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/courses" className="btn-primary text-lg">
+              <Link href="/courses" className="btn-primary text-lg group">
                 Browse Courses
+                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
               <Link href="/categories" className="btn-secondary text-lg">
                 Explore Categories
@@ -41,17 +64,21 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{courses.length}+</div>
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
+            </div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{instructors.length}+</div>
               <div className="text-navy-400 text-sm">Instructors</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+            <div className="text-center bg-navy-900/30 backdrop-blur-sm border border-navy-800 rounded-xl p-4 hover:border-primary-500/30 transition-colors">
+              <div className="text-3xl font-bold text-white mb-1">{categories.length}</div>
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
@@ -63,11 +90,16 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">🌟</span>
+                <span className="text-primary-400 text-sm font-semibold uppercase tracking-wider">Most Popular</span>
+              </div>
               <h2 className="text-3xl font-bold text-white mb-2">Featured Courses</h2>
               <p className="text-navy-400">Start learning with our most popular courses</p>
             </div>
-            <Link href="/courses" className="btn-secondary hidden sm:inline-flex">
+            <Link href="/courses" className="btn-secondary hidden sm:inline-flex group">
               View All Courses
+              <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
           
@@ -81,6 +113,34 @@ export default async function HomePage() {
             <Link href="/courses" className="btn-secondary">
               View All Courses
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Path Suggestion */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="bg-gradient-to-r from-navy-900/80 to-navy-800/80 backdrop-blur-xl border border-navy-700 rounded-3xl p-8 md:p-12">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-shrink-0 text-6xl">🎯</div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl font-bold text-white mb-2">Not sure where to start?</h3>
+                <p className="text-navy-300 mb-4">
+                  Take our quick quiz to get personalized course recommendations based on your goals and experience level.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Beginner Friendly</span>
+                  <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">Career Focused</span>
+                  <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">Hands-on Projects</span>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <Link href="/courses" className="btn-primary whitespace-nowrap">
+                  Explore Courses
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -117,19 +177,56 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Testimonial/Social Proof */}
+      <section className="py-16 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex justify-center gap-1 mb-4">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span key={star} className="text-yellow-400 text-2xl">⭐</span>
+              ))}
+            </div>
+            <blockquote className="text-xl md:text-2xl text-white font-medium mb-4 italic">
+              "LearnHub transformed my career. The courses are incredibly well-structured and the instructors are world-class."
+            </blockquote>
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-xl font-bold text-white">
+                S
+              </div>
+              <div className="text-left">
+                <p className="text-white font-semibold">Sarah Johnson</p>
+                <p className="text-navy-400 text-sm">Full Stack Developer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="card p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
-            </h2>
-            <p className="text-navy-300 mb-8 text-lg">
-              Join thousands of students and start your journey to mastering new skills today.
-            </p>
-            <Link href="/courses" className="btn-primary text-lg">
-              Get Started Now
-            </Link>
+          <div className="card p-12 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            
+            <div className="relative">
+              <span className="text-5xl mb-4 block">🚀</span>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to start learning?
+              </h2>
+              <p className="text-navy-300 mb-8 text-lg">
+                Join thousands of students and start your journey to mastering new skills today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/courses" className="btn-primary text-lg">
+                  Get Started Now
+                </Link>
+                <Link href="/contact" className="btn-secondary text-lg">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
