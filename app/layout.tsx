@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
+import KeyboardShortcuts from '@/components/KeyboardShortcuts'
 
 export const metadata: Metadata = {
   title: 'LearnHub - Online Learning Platform',
@@ -31,6 +32,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <CosmicBadge bucketSlug={bucketSlug} />
+        <KeyboardShortcuts />
       </body>
     </html>
   )
