@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import LearningStats from '@/components/LearningStats'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -12,6 +13,16 @@ export default async function HomePage() {
   ])
 
   const featuredCourses = courses.slice(0, 3)
+  
+  // Calculate total learning hours and lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    const lessonCount = course.metadata?.lessons?.length || 0
+    return acc + lessonCount
+  }, 0)
+  
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
 
   return (
     <div>
@@ -55,6 +66,23 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Interactive Learning Stats Dashboard */}
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-navy-900/50 to-primary-500/5" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-white mb-2">Your Learning Journey</h2>
+            <p className="text-navy-400">Track your progress and stay motivated</p>
+          </div>
+          <LearningStats 
+            totalCourses={courses.length}
+            totalLessons={totalLessons}
+            totalHours={totalHours}
+            totalInstructors={instructors.length}
+          />
         </div>
       </section>
 
