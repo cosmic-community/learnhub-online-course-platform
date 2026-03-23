@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import DailyStreak from '@/components/DailyStreak'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -22,6 +23,11 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            {/* Daily Streak Badge */}
+            <div className="flex justify-center mb-6">
+              <DailyStreak />
+            </div>
+
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
