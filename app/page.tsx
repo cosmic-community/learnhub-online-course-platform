@@ -3,6 +3,7 @@ import { getCourses, getCategories, getInstructors } from '@/lib/cosmic'
 import CourseCard from '@/components/CourseCard'
 import CategoryCard from '@/components/CategoryCard'
 import InstructorCard from '@/components/InstructorCard'
+import DailyTip from '@/components/DailyTip'
 
 export default async function HomePage() {
   const [courses, categories, instructors] = await Promise.all([
@@ -55,6 +56,13 @@ export default async function HomePage() {
               <div className="text-navy-400 text-sm">Categories</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Daily Learning Tip */}
+      <section className="py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <DailyTip />
         </div>
       </section>
 
