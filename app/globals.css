@@ -16,15 +16,15 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98];
   }
   
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-navy-800 hover:bg-navy-700 text-white font-semibold rounded-lg transition-all duration-200 border border-navy-700;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-navy-800 hover:bg-navy-700 text-white font-semibold rounded-lg transition-all duration-200 border border-navy-700 hover:border-navy-600;
   }
   
   .card {
-    @apply bg-navy-900/50 backdrop-blur-sm border border-navy-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-navy-700 hover:shadow-xl hover:shadow-primary-500/5;
+    @apply bg-navy-900/50 backdrop-blur-sm border border-navy-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-navy-700 hover:shadow-xl hover:shadow-primary-500/5 hover:-translate-y-1;
   }
   
   .badge {
@@ -46,6 +46,137 @@
   .badge-free {
     @apply bg-primary-500/20 text-primary-400;
   }
+}
+
+/* Custom animations */
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulse-slower {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes streak-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(251, 146, 60, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(251, 146, 60, 0.6);
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.animate-pulse-slower {
+  animation: pulse-slower 6s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-confetti {
+  animation: confetti-fall 3s linear forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s ease-out forwards;
+}
+
+.animate-streak-glow {
+  animation: streak-glow 2s ease-in-out infinite;
 }
 
 /* Prose styles for markdown content */
@@ -104,4 +235,29 @@
 
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
+}
+
+/* Spotlight search overlay */
+.spotlight-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Custom scrollbar for spotlight results */
+.spotlight-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.spotlight-results::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 3px;
+}
+
+.spotlight-results::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.5);
+  border-radius: 3px;
+}
+
+.spotlight-results::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.7);
 }
