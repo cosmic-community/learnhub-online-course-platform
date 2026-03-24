@@ -105,3 +105,82 @@
 .prose blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic text-navy-300 my-4;
 }
+
+/* Learning Streak animations */
+@keyframes fade-in {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+/* Floating particles for hero section */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 50%;
+  animation: float 15s infinite;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  top: 60%;
+  left: 80%;
+  animation-delay: -5s;
+}
+
+.particle-3 {
+  top: 40%;
+  left: 50%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(50px, -50px) rotate(90deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(100px, 0) rotate(180deg);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translate(50px, 50px) rotate(270deg);
+    opacity: 0.5;
+  }
+}
+
+/* Pulse animation for streak emoji */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(99, 102, 241, 0));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+  }
+}
+
+.animate-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
