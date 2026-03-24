@@ -13,6 +13,16 @@ export default async function HomePage() {
 
   const featuredCourses = courses.slice(0, 3)
 
+  // Calculate total learning time
+  const totalHours = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.estimated_hours || 0)
+  }, 0)
+
+  // Calculate total lessons
+  const totalLessons = courses.reduce((acc, course) => {
+    return acc + (course.metadata?.lessons?.length || 0)
+  }, 0)
+
   return (
     <div>
       {/* Hero Section */}
@@ -22,13 +32,18 @@ export default async function HomePage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-6">
+              <span className="animate-pulse">🔥</span>
+              <span>Track your progress & earn streaks!</span>
+            </div>
+            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Learn skills that
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> advance your career</span>
             </h1>
             <p className="text-xl text-navy-300 mb-8">
               Master web development, design, and more with expert-led courses. 
-              Start your learning journey today.
+              Track your progress and build your learning streak!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/courses" className="btn-primary text-lg">
@@ -41,18 +56,52 @@ export default async function HomePage() {
           </div>
           
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
               <div className="text-3xl font-bold text-white">{courses.length}+</div>
               <div className="text-navy-400 text-sm">Courses</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
-              <div className="text-navy-400 text-sm">Instructors</div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalLessons}+</div>
+              <div className="text-navy-400 text-sm">Lessons</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
-              <div className="text-navy-400 text-sm">Categories</div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{totalHours}+</div>
+              <div className="text-navy-400 text-sm">Hours of Content</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-navy-900/30 border border-navy-800">
+              <div className="text-3xl font-bold text-white">{instructors.length}+</div>
+              <div className="text-navy-400 text-sm">Expert Instructors</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Teaser */}
+      <section className="py-12 border-b border-navy-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="card p-8 bg-gradient-to-r from-primary-500/10 to-purple-500/10 border-primary-500/20">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="text-5xl">🏆</div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">Earn Achievements & Build Your Streak</h3>
+                  <p className="text-navy-300">
+                    Complete lessons to unlock badges, track your progress, and maintain your daily learning streak!
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 border-2 border-navy-900 flex items-center justify-center text-lg">🚀</div>
+                  <div className="w-10 h-10 rounded-full bg-yellow-500/20 border-2 border-navy-900 flex items-center justify-center text-lg">⭐</div>
+                  <div className="w-10 h-10 rounded-full bg-purple-500/20 border-2 border-navy-900 flex items-center justify-center text-lg">💎</div>
+                  <div className="w-10 h-10 rounded-full bg-primary-500/20 border-2 border-navy-900 flex items-center justify-center text-lg">🔥</div>
+                </div>
+                <Link href="/courses" className="btn-primary">
+                  Start Learning
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -121,11 +170,13 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="card p-12">
+            <div className="text-5xl mb-6">🎯</div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to start learning?
             </h2>
             <p className="text-navy-300 mb-8 text-lg">
               Join thousands of students and start your journey to mastering new skills today.
+              Track your progress, earn badges, and build your learning streak!
             </p>
             <Link href="/courses" className="btn-primary text-lg">
               Get Started Now
